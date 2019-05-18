@@ -61,14 +61,8 @@
 
         <dependency>
             <groupId>org.jooby</groupId>
-            <artifactId>jooby-jdbi</artifactId>
+            <artifactId>jooby-requery</artifactId>
             <version>${jooby.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jdbi</groupId>
-            <artifactId>jdbi3-sqlobject</artifactId>
-            <version>${jdbi3.version}</version>
         </dependency>
 
         <!-- h2 driver -->
@@ -83,14 +77,6 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>3.6.3</version>
-        </dependency>
-
-        <!-- Boilerplate Generation -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Tests -->

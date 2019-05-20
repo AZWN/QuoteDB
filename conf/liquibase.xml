@@ -6,6 +6,14 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="1" author="azwaan">
+        <createTable tableName="categories">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
         <createTable tableName="quotes">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -19,7 +27,37 @@
             <column name="source" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="category_id" type="int">
+                <constraints nullable="false" />
+            </column>
         </createTable>
+        <addForeignKeyConstraint baseTableName="quotes" baseColumnNames="category_id"
+                                 constraintName="fk_quotes_categories"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"/>
+        <createTable tableName="labels">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="labelName" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="quotes_labels">
+            <column name="quote_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="quotes_labels" baseColumnNames="quote_id"
+                                 constraintName="fk_quotelabels_quotes"
+                                 referencedTableName="quotes"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="quotes_labels" baseColumnNames="label_id"
+                                 constraintName="fk_quotelabels_labels"
+                                 referencedTableName="labels"
+                                 referencedColumnNames="id"/>
     </changeSet>
-
 </databaseChangeLog>

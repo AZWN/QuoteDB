@@ -1,8 +1,8 @@
 package nl.azwaan.quotedb.models;
 
-import io.requery.Entity;
-import io.requery.Generated;
-import io.requery.Key;
+import io.requery.*;
+
+import java.util.Set;
 
 @Entity
 public abstract class AbstractQuote {
@@ -28,4 +28,14 @@ public abstract class AbstractQuote {
      * AbstractQuote source
      */
     public String source;
+
+    /**
+     * Category to which this quote belongs
+     */
+    @ManyToOne
+    public Category category;
+
+    @ManyToMany
+    @JunctionTable
+    public Set<Label> labels;
 }

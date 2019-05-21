@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Singleton
-@Path("/quotes")
+@Path("/categories/:categoryId/quotes")
 public class QuotesAPI {
 
     private QuotesDAO quotesDAO;
@@ -23,7 +23,7 @@ public class QuotesAPI {
 
     @GET
     @Path("/")
-    public Stream<Quote> getAll(Optional<Integer> page, Optional<Integer> pageSize) {
-        return quotesDAO.getAllQuotes(page.orElse(1), pageSize.orElse(100));
+    public Stream<Quote> getAll(long categoryId, Optional<Integer> page, Optional<Integer> pageSize) {
+        return quotesDAO.getAllQuotes(categoryId, page.orElse(1), pageSize.orElse(100));
     }
 }

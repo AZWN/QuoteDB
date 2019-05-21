@@ -13,19 +13,12 @@ import nl.azwaan.quotedb.models.Models;
  */
 public class QuoteDBApp extends Jooby {
 
-    // To remember:
-    // - Possible using MVC api is most composable
-
     {
         use(new Jackson());
 
-        /* String osName = System.getProperty("os.name");
-        String dbConf = osName.equals("Linux") ? "db_linux" : "db_win"; */
-        String dbConf = "db";
+        use(new Jdbc());
 
-        use(new Jdbc(dbConf));
-
-        use(new Requery(dbConf, Models.DEFAULT)
+        use(new Requery(Models.DEFAULT)
                 .schema(TableCreationMode.CREATE_NOT_EXISTS));
 
         use(new RestAPIModule());

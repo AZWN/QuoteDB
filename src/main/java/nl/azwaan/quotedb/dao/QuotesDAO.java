@@ -18,12 +18,14 @@ public class QuotesDAO {
         this.quotesEntityStore = quotesEntityStore;
     }
 
-    public Stream<Quote> getAllQuotes(int page, int pageSize) {
+    public Stream<Quote> getAllQuotes(long categoryId, int page, int pageSize) {
         if (pageSize < 1 || pageSize > 100) {
             throw new IllegalArgumentException("pageSize must be between 1 and 100 (inclusive)");
         }
 
         return quotesEntityStore.select(Quote.class)
+                .where(Quote.CATEGORY_ID.eq(categoryId))
+                .orderBy(Quote.GENERATION_DATE.asc(), Quote.ID.asc())
                 .limit(page * pageSize)
                 .get()
                 .stream()

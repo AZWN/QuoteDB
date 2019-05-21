@@ -1,4 +1,4 @@
-package nl.azwaan.quotedb;
+package nl.azwaan.quotedb.integration.api;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -7,6 +7,8 @@ import static org.hamcrest.Matchers.*;
 import io.requery.EntityStore;
 import io.requery.query.Result;
 import io.restassured.http.ContentType;
+import nl.azwaan.quotedb.JoobyClearDatabaseRule;
+import nl.azwaan.quotedb.QuoteDBApp;
 import nl.azwaan.quotedb.models.Label;
 import org.junit.Rule;
 import org.junit.Test;

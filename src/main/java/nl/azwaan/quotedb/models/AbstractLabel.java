@@ -1,9 +1,6 @@
 package nl.azwaan.quotedb.models;
 
-import io.requery.Column;
-import io.requery.Entity;
-import io.requery.Generated;
-import io.requery.Key;
+import io.requery.*;
 
 @Entity
 public abstract class AbstractLabel {
@@ -11,6 +8,7 @@ public abstract class AbstractLabel {
     @Key @Generated
     public Long id;
 
+    @Index
     @Column(unique = true)
     public String labelName;
 }

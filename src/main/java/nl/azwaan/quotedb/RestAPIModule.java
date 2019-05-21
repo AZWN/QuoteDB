@@ -17,5 +17,6 @@ public class RestAPIModule implements Jooby.Module {
         Router router = env.router();
         router.use("/api", QuotesAPI.class);
         router.use("/api", LabelsAPI.class);
+
     }
 }

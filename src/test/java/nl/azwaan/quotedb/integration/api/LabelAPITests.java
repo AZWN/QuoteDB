@@ -57,12 +57,14 @@ public class LabelAPITests {
         param.labelName = "Label3";
 
         given()
-            .body(param)
-            .contentType(ContentType.JSON)
-            .post("/api/labels")
-            .then()
-            .assertThat()
-            .statusCode(201);
+                .body(param)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .post("/api/labels")
+                .then()
+                .assertThat()
+                .contentType(ContentType.JSON)
+                .statusCode(201);
 
         Label lbl = ((Result<Label>) store.select(Label.class)
                 .get())
@@ -83,17 +85,21 @@ public class LabelAPITests {
         given()
                 .body(param)
                 .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
                 .post("/api/labels")
                 .then()
                 .assertThat()
+                .contentType(ContentType.JSON)
                 .statusCode(201);
 
         // Insert same label again
         given()
                 .body(param)
                 .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
                 .post("/api/labels")
                 .then()
+                .contentType(ContentType.JSON)
                 .statusCode(409);
 
         long lblCount = ((Result<Label>) store.select(Label.class)

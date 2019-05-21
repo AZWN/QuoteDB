@@ -8,15 +8,14 @@ import org.jooby.Response;
 import org.jooby.Result;
 import org.jooby.Results;
 import org.jooby.Status;
-import org.jooby.mvc.Body;
-import org.jooby.mvc.GET;
-import org.jooby.mvc.POST;
-import org.jooby.mvc.Path;
+import org.jooby.mvc.*;
 
 import java.util.stream.Stream;
 
 @Singleton
 @Path("/labels")
+@Produces("application/json")
+@Consumes(value = {"application/json"})
 public class LabelsAPI {
 
     private LabelsDAO labelsDAO;
@@ -36,10 +35,7 @@ public class LabelsAPI {
     @Path("")
     public Result addLabel(@Body PostLabel label) {
         if (labelsDAO.labelExists(label.labelName)) {
-            Result res = new Result();
-            res.status(Status.CONFLICT);
-            res.set(new APIError("This label already exists"));
-            return res;
+            throw new ResourceConflictException("Label with name '%s' already exists", label.labelName);
         }
 
         Label lbl = labelsDAO.createLabel(label.labelName);

@@ -8,25 +8,45 @@ import nl.azwaan.quotedb.models.Category;
 
 import java.util.stream.Stream;
 
+/**
+ * Class used to access the database for {@link Category} resources.
+ *
+ * @author Aron Zwaan
+ */
 @Singleton
 public class CategoriesDAO {
 
     private EntityStore<Persistable, Category> categoryEntityStore;
 
+    /**
+     * Constructs a new {@link CategoriesDAO}.
+     * @param categoryEntityStore The {@link EntityStore} used to access the database.
+     */
     @Inject
     public CategoriesDAO(EntityStore<Persistable, Category> categoryEntityStore) {
         this.categoryEntityStore = categoryEntityStore;
     }
 
+    /**
+     * Returns all available categories.
+     *
+     * @return A {@link Stream} supplying all categories.
+     */
     public Stream<Category> getAll() {
         return categoryEntityStore.select(Category.class)
                 .get()
                 .stream();
     }
 
-    public boolean categoryWithNameExists(String name) {
+    /**
+     * Checks if a category with name categoryName exists.
+     *
+     * @param categoryName The name of the category to check existence of.
+     * @return {@code true} if a category with the supplied name already exists, {@code false} otherwise.
+     */
+    public boolean categoryWithNameExists(String categoryName) {
         return categoryEntityStore.select(Category.class)
-                .where(Category.NAME.eq(name))
+                .where(Category.NAME.eq(categoryName))
                 .limit(1)
                 .get()
                 .stream()
@@ -34,8 +54,13 @@ public class CategoriesDAO {
                 .isPresent();
     }
 
+    /**
+     * Creates a new category with the given name. Does not check if the category does already exist.
+     * @param name The name for the new category
+     * @return The generated Category entity.
+     */
     public Category createCategory(String name) {
-        Category cat = new Category();
+        final Category cat = new Category();
         cat.setName(name);
 
         categoryEntityStore.insert(cat);

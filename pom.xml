@@ -250,6 +250,11 @@
                             <version>8.20</version>
                         </dependency>
                     </dependencies>
+                    <configuration>
+                        <sourceDirectories>
+                            <sourceDirectory>src/main/java</sourceDirectory>
+                        </sourceDirectories>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -4,8 +4,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.azwaan.quotedb.dao.QuotesDAO;
 import nl.azwaan.quotedb.models.Quote;
+import org.jooby.Result;
+import org.jooby.Results;
+import org.jooby.Status;
 import org.jooby.mvc.Consumes;
 import org.jooby.mvc.GET;
+import org.jooby.mvc.POST;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
@@ -47,5 +51,20 @@ public class QuotesAPI {
     @Path("/")
     public Stream<Quote> getAll(long categoryId, Optional<Integer> page, Optional<Integer> pageSize) {
         return quotesDAO.getAllQuotes(categoryId, page.orElse(1), pageSize.orElse(MAX_PAGE_SIZE));
+    }
+
+    /**
+     * Creates a new quote in the db.
+     *
+     * @param quote The quote to create
+     * @return The created quote entity
+     */
+    @POST
+    @Path("/")
+    public Result insertQuote(Quote quote) {
+        final Quote generatedQuote = quotesDAO.createQuote(quote);
+        final Result res = Results.ok(generatedQuote);
+        res.status(Status.CREATED);
+        return res;
     }
 }

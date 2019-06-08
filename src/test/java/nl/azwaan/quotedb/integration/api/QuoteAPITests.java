@@ -1,6 +1,7 @@
 package nl.azwaan.quotedb.integration.api;
 
 import io.requery.EntityStore;
+import io.restassured.http.ContentType;
 import nl.azwaan.quotedb.JoobyClearDatabaseRule;
 import nl.azwaan.quotedb.QuoteDBApp;
 import nl.azwaan.quotedb.models.Category;
@@ -10,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 public class QuoteAPITests {
@@ -98,6 +100,29 @@ public class QuoteAPITests {
                 .assertThat()
                 .statusCode(400);
     }
+
+    @Test
+    public void testCreateQuote() {
+        String url = String.format("/api/categories/%d/quotes", cat.id);
+
+
+        Quote quote = new Quote();
+        quote.setText("My super fancy quote");
+        quote.setSource("Test");
+        quote.setCategory(cat);
+        quote.setAuthor("Who could this be??");
+
+        given()
+                .body(quote)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .post(url)
+                .then()
+                .assertThat()
+                .contentType(ContentType.JSON)
+                .statusCode(201);
+    }
+
 
     private void insertQuotes(int quoteCount) {
         EntityStore store = app.require(EntityStore.class);

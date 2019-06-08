@@ -52,4 +52,16 @@ public class QuotesDAO {
                 .skip((page - 1) * pageSize);
     }
 
+    /**
+     * Creates a new quote.
+     *
+     * @param quote The quote to create
+     * @return The created quote
+     */
+    public Quote createQuote(Quote quote) {
+        quotesEntityStore.insert(quote);
+        quotesEntityStore.refresh(quote);
+        return quote;
+    }
+
 }

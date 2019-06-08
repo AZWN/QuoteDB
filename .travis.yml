@@ -4,5 +4,5 @@ jdk:
 cache:
   directories:
   - $HOME/.m2
-after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+script:
+  - mvn clean verify jacoco:report coveralls:report

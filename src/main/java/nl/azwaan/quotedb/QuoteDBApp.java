@@ -4,13 +4,13 @@ import io.requery.sql.TableCreationMode;
 
 import org.jooby.Jooby;
 import org.jooby.Results;
-import org.jooby.assets.Assets;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 import org.jooby.pebble.Pebble;
 import org.jooby.requery.Requery;
 
 import nl.azwaan.quotedb.models.Models;
+
 /**
  * Quote database Application.
  *
@@ -27,13 +27,14 @@ public class QuoteDBApp extends Jooby {
         use(new Requery(Models.DEFAULT)
                 .schema(TableCreationMode.CREATE_NOT_EXISTS));
 
-        use(new RestAPIModule());
-
         // React frontend setup
-        use(new Assets());
+        // use(new Assets());
 
         use(new Pebble());
         get("/", () -> Results.html("index"));
+
+        use(new AuthModule());
+        use(new RestAPIModule());
     }
 
     /**

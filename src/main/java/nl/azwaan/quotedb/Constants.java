@@ -14,4 +14,9 @@ public final class Constants {
      */
     public static final int MAX_PAGE_SIZE = 100;
 
+    /**
+     * User id session property key.
+     */
+    public static final String USER_ID_SESSION_KEY = "loggedin_user_id";
+
 }

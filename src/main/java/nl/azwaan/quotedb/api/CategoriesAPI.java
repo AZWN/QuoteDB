@@ -65,9 +65,4 @@ public class CategoriesAPI {
         res.status(Status.CREATED);
         return res;
     }
-
-    /**
-    public static class PostCategory {
-        public String name;
-    }*/
 }

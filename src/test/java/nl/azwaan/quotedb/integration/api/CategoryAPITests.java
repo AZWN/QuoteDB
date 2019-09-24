@@ -7,20 +7,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import io.requery.EntityStore;
 import io.requery.query.Result;
 import io.restassured.http.ContentType;
-import nl.azwaan.quotedb.JoobyClearDatabaseRule;
-import nl.azwaan.quotedb.QuoteDBApp;
 import nl.azwaan.quotedb.models.Category;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
 
-public class CategoryAPITests {
-
-    private QuoteDBApp app = new QuoteDBApp();
-
-    @Rule
-    public JoobyClearDatabaseRule bootstrap = new JoobyClearDatabaseRule(app);
+public class CategoryAPITests extends AuthenticatedTest {
 
     @Test
     public void testGetAllCategories() {
@@ -38,7 +30,9 @@ public class CategoryAPITests {
         store.insert(cat2);
         store.refresh(cat2);
 
-        get("/api/categories")
+        given()
+                .header("Authorization", getToken())
+                .get("/api/categories")
                 .then()
                 .contentType(ContentType.JSON)
                 .body("size()", equalTo(2)).and()
@@ -52,6 +46,7 @@ public class CategoryAPITests {
                 .body("{\"name\":\"Cat 1\"}")
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
+                .header("Authorization", getToken())
                 .post("/api/categories")
                 .then()
                 .assertThat()
@@ -74,6 +69,7 @@ public class CategoryAPITests {
                 .body("{\"name\":\"Cat 1\"}")
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
+                .header("Authorization", getToken())
                 .post("/api/categories")
                 .then()
                 .assertThat()
@@ -83,6 +79,7 @@ public class CategoryAPITests {
                 .body("{\"name\":\"Cat 1\"}")
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
+                .header("Authorization", getToken())
                 .post("/api/categories")
                 .then()
                 .assertThat()

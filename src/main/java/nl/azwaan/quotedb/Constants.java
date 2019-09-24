@@ -7,6 +7,16 @@ package nl.azwaan.quotedb;
  */
 public final class Constants {
 
+    /**
+     * Key to hash/sign JWT tokens with.
+     */
+    public static final String JWT_HASH_KEY = "SecretToBeMadeConfigurable283475623of2oiergf207834fgwejhrbv";
+
+    /**
+     * JWT property key for storing user id in token.
+     */
+    public static final String JWT_USER_ID_KEY = "user_id";
+
     private Constants() { }
 
     /**

@@ -61,6 +61,7 @@ public class UsersDAO {
         if (!userNameExists(userName)) {
             return false;
         }
+
         final User user = usersEntityStore.select(User.class)
                 .where(User.USER_NAME.eq(userName))
                 .get()

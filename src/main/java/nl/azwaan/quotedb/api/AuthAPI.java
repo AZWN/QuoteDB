@@ -1,5 +1,8 @@
 package nl.azwaan.quotedb.api;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.azwaan.quotedb.Constants;
@@ -15,12 +18,15 @@ import org.jooby.mvc.POST;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
+import java.util.Date;
+
 @Singleton
 @Path("/auth")
 @Produces("application/json")
 @Consumes("application/json")
 public class AuthAPI {
 
+    private static final long TWO_DAYS = 1000 * 60 * 60 * 48;
     private UsersDAO usersDAO;
 
     /**
@@ -56,18 +62,31 @@ public class AuthAPI {
     @Path("/login")
     @POST
     public Result login(Request request, @Body Credentials creds) {
-        final Result res = new Result();
         if (usersDAO.userHasPassword(creds.userName, creds.password)) {
             final User user = usersDAO.getUserByUserName(creds.userName);
-            request.session().set(Constants.USER_ID_SESSION_KEY, user.id);
-            res.status(Status.ACCEPTED);
+
+            // 2 days from now
+            final Date date = new Date();
+            date.setTime(date.getTime() + TWO_DAYS);
+
+            final String signedToken = JWT.create()
+                    .withClaim(Constants.JWT_USER_ID_KEY, user.id.toString())
+                    .withExpiresAt(date)
+                    .sign(Algorithm.HMAC512(Constants.JWT_HASH_KEY));
+
+            final Token token = new Token();
+            token.token = signedToken;
+
+            final Result res = Results.accepted(token);
             return res;
         }
 
+        final Result res = new Result();
         res.status(Status.UNAUTHORIZED);
         return res;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Credentials {
         /**
          * The client-provided username.
@@ -77,5 +96,13 @@ public class AuthAPI {
          * The client-provided password.
          */
         public String password;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Token {
+        /**
+         * The value of the token.
+         */
+        public String token;
     }
 }

@@ -7,22 +7,17 @@ import static org.hamcrest.Matchers.*;
 import io.requery.EntityStore;
 import io.requery.query.Result;
 import io.restassured.http.ContentType;
-import nl.azwaan.quotedb.JoobyClearDatabaseRule;
-import nl.azwaan.quotedb.QuoteDBApp;
 import nl.azwaan.quotedb.models.Label;
-import org.junit.Rule;
 import org.junit.Test;
 
-public class LabelAPITests {
-
-    private QuoteDBApp app = new QuoteDBApp();
-
-    @Rule
-    public JoobyClearDatabaseRule bootstrap = new JoobyClearDatabaseRule(app);
+public class LabelAPITests extends AuthenticatedTest {
 
     @Test
     public void testGetLabelsNoLabels() throws Throwable {
-        get("/api/labels")
+
+        given()
+                .header("Authorization", getToken())
+                .get("/api/labels")
                 .then()
                 .assertThat()
                 .body(equalTo("[]"));
@@ -41,7 +36,10 @@ public class LabelAPITests {
         store.insert(label1);
         store.insert(label2);
 
-        get("/api/labels")
+
+        given()
+            .header("Authorization", getToken())
+            .get("/api/labels")
             .then()
             .assertThat()
             .body("[0].labelName", equalTo("Label1"))
@@ -60,6 +58,7 @@ public class LabelAPITests {
                 .body(param)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
+                .header("Authorization", getToken())
                 .post("/api/labels")
                 .then()
                 .assertThat()
@@ -86,6 +85,7 @@ public class LabelAPITests {
                 .body(param)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
+                .header("Authorization", getToken())
                 .post("/api/labels")
                 .then()
                 .assertThat()
@@ -97,6 +97,7 @@ public class LabelAPITests {
                 .body(param)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
+                .header("Authorization", getToken())
                 .post("/api/labels")
                 .then()
                 .contentType(ContentType.JSON)

@@ -1,6 +1,5 @@
 package nl.azwaan.quotedb.integration.api;
 
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -15,8 +14,7 @@ public class LabelAPITests extends AuthenticatedTest {
     @Test
     public void testGetLabelsNoLabels() throws Throwable {
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get("/api/labels")
                 .then()
                 .assertThat()
@@ -37,8 +35,7 @@ public class LabelAPITests extends AuthenticatedTest {
         store.insert(label2);
 
 
-        given()
-            .header("Authorization", getToken())
+        getBase()
             .get("/api/labels")
             .then()
             .assertThat()
@@ -54,11 +51,8 @@ public class LabelAPITests extends AuthenticatedTest {
         LabelParam param = new LabelParam();
         param.labelName = "Label3";
 
-        given()
+        postBase()
                 .body(param)
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", getToken())
                 .post("/api/labels")
                 .then()
                 .assertThat()
@@ -81,11 +75,8 @@ public class LabelAPITests extends AuthenticatedTest {
         LabelParam param = new LabelParam();
         param.labelName = "Label4";
 
-        given()
+        postBase()
                 .body(param)
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", getToken())
                 .post("/api/labels")
                 .then()
                 .assertThat()
@@ -93,11 +84,8 @@ public class LabelAPITests extends AuthenticatedTest {
                 .statusCode(201);
 
         // Insert same label again
-        given()
+        postBase()
                 .body(param)
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", getToken())
                 .post("/api/labels")
                 .then()
                 .contentType(ContentType.JSON)

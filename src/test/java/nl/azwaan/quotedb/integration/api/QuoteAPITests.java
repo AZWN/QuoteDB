@@ -29,8 +29,7 @@ public class QuoteAPITests extends AuthenticatedTest {
     public void testGetLabelsNoLabels() throws Throwable {
         String url = String.format("/api/categories/%d/quotes", cat.id);
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get(url)
                 .then()
                 .assertThat()
@@ -42,8 +41,7 @@ public class QuoteAPITests extends AuthenticatedTest {
         insertQuotes(120);
         String url = String.format("/api/categories/%d/quotes", cat.id);
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get(url)
                 .then()
                 .assertThat()
@@ -58,8 +56,7 @@ public class QuoteAPITests extends AuthenticatedTest {
         insertQuotes(120);
         String url = String.format("/api/categories/%d/quotes?page=2", cat.id);
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get(url)
                 .then()
                 .assertThat()
@@ -74,8 +71,7 @@ public class QuoteAPITests extends AuthenticatedTest {
         insertQuotes(50);
         String url = String.format("/api/categories/%d/quotes?page=2&pageSize=20", cat.id);
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get(url)
                 .then()
                 .assertThat()
@@ -90,8 +86,7 @@ public class QuoteAPITests extends AuthenticatedTest {
         insertQuotes(120);
         String url = String.format("/api/categories/%d/quotes?pageSize=120", cat.id);
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get(url)
                 .then()
                 .assertThat()
@@ -103,8 +98,7 @@ public class QuoteAPITests extends AuthenticatedTest {
         insertQuotes(120);
         String url = String.format("/api/categories/%d/quotes?pageSize=0", cat.id);
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get(url)
                 .then()
                 .assertThat()
@@ -122,11 +116,8 @@ public class QuoteAPITests extends AuthenticatedTest {
         quote.setCategory(cat);
         quote.setAuthor("Who could this be??");
 
-        given()
+        postBase()
                 .body(quote)
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", getToken())
                 .post(url)
                 .then()
                 .assertThat()

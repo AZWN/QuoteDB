@@ -14,14 +14,14 @@ import org.junit.runner.RunWith;
 import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.StrictStubs.class)
 public class UsersDAOTests {
 
     @Mock
@@ -30,14 +30,49 @@ public class UsersDAOTests {
     @InjectMocks
     private UsersDAO usersDAO;
 
+    private final String salt = BCrypt.gensalt();
+    private final String hashedPassword = BCrypt.hashpw("pwd1", salt);
+
     @Test
     public void testFalseOnNullPassword() {
-        userEntityStore = mock(EntityStore.class, RETURNS_DEEP_STUBS);
-        usersDAO = new UsersDAO(userEntityStore);
+        setupMocksForPassword();
+        Assert.assertThat(usersDAO.userHasPassword("user1", null), Is.is(false));
+    }
 
-        final String salt = BCrypt.gensalt();
-        final String hashedPassword = BCrypt.hashpw("pwd1", salt);
+    @Test
+    public void testFalseOnIncorrectPassword() {
+        setupMocksForPassword();
 
+        Assert.assertThat(usersDAO.userHasPassword("user1", "pwd2"), Is.is(false));
+    }
+
+
+    @Test
+    public void testTrueOnCorrectPassword() {
+        setupMocksForPassword();
+        Assert.assertThat(usersDAO.userHasPassword("user1", "pwd1"), Is.is(true));
+    }
+
+    @Test
+    public void testFalseOnNonExistingUser() {
+        final Selection s = mock(Selection.class);
+        final WhereAndOr w = mock(WhereAndOr.class);
+        final Result<User> r = mock(Result.class);
+        final Stream<User> str = mock(Stream.class);
+
+        // Set up password query
+        when(userEntityStore.select(eq(User.class))).thenReturn(s);
+        when(s.where(User.USER_NAME.eq("user1"))).thenReturn(w);
+        when(w.get()).thenReturn(r);
+
+        // Set up username exists
+        when(r.stream()).thenReturn(str);
+        when(str.findAny()).thenReturn(Optional.empty());
+
+        Assert.assertThat(usersDAO.userHasPassword("user1", "pwd1"), Is.is(false));
+    }
+
+    private void setupMocksForPassword() {
         final User user = new User();
         user.setUserName("user1");
         user.setPassword(hashedPassword);
@@ -56,8 +91,5 @@ public class UsersDAOTests {
         // Set up username exists
         when(r.stream()).thenReturn(str);
         when(str.findAny()).thenReturn(Optional.of(user));
-
-        Assert.assertThat(usersDAO.userHasPassword("user1", null), Is.is(false));
     }
-
 }

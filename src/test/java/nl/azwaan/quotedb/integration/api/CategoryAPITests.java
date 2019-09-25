@@ -1,6 +1,5 @@
 package nl.azwaan.quotedb.integration.api;
 
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -30,8 +29,7 @@ public class CategoryAPITests extends AuthenticatedTest {
         store.insert(cat2);
         store.refresh(cat2);
 
-        given()
-                .header("Authorization", getToken())
+        getBase()
                 .get("/api/categories")
                 .then()
                 .contentType(ContentType.JSON)
@@ -42,10 +40,8 @@ public class CategoryAPITests extends AuthenticatedTest {
 
     @Test
     public void testAddCategory() {
-        given()
+        postBase()
                 .body("{\"name\":\"Cat 1\"}")
-                .accept(ContentType.JSON)
-                .contentType(ContentType.JSON)
                 .header("Authorization", getToken())
                 .post("/api/categories")
                 .then()
@@ -63,22 +59,19 @@ public class CategoryAPITests extends AuthenticatedTest {
         Category cat = categories.get(0);
         assertThat(cat.name, equalTo("Cat 1"));
     }
+
     @Test
     public void testNoDoubleAddCategory() {
-        given()
+        postBase()
                 .body("{\"name\":\"Cat 1\"}")
-                .accept(ContentType.JSON)
-                .contentType(ContentType.JSON)
                 .header("Authorization", getToken())
                 .post("/api/categories")
                 .then()
                 .assertThat()
                 .statusCode(201);
 
-        given()
+        postBase()
                 .body("{\"name\":\"Cat 1\"}")
-                .accept(ContentType.JSON)
-                .contentType(ContentType.JSON)
                 .header("Authorization", getToken())
                 .post("/api/categories")
                 .then()

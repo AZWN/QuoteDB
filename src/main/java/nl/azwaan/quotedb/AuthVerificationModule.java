@@ -6,9 +6,12 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.inject.Binder;
 import com.typesafe.config.Config;
-import nl.azwaan.quotedb.api.AuthAPI;
 import nl.azwaan.quotedb.exceptions.IncompleteTokenException;
-import org.jooby.*;
+import org.jooby.Env;
+import org.jooby.Jooby;
+import org.jooby.Mutant;
+import org.jooby.Router;
+import org.jooby.Status;
 
 import java.util.Map;
 

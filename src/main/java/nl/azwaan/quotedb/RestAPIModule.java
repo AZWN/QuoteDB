@@ -1,24 +1,15 @@
 package nl.azwaan.quotedb;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.inject.Binder;
 import com.typesafe.config.Config;
 import nl.azwaan.quotedb.api.CategoriesAPI;
-import nl.azwaan.quotedb.exceptions.IncompleteTokenException;
-import nl.azwaan.quotedb.exceptions.InvalidRequestException;
 import nl.azwaan.quotedb.api.LabelsAPI;
 import nl.azwaan.quotedb.api.QuotesAPI;
 import org.jooby.Env;
 import org.jooby.Jooby;
-import org.jooby.Mutant;
 import org.jooby.Router;
-import org.jooby.Status;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 /**
  * Module controlling the REST API ({@code /api/**} routes).

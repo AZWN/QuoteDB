@@ -47,6 +47,14 @@ public class AuthAPI {
     @Path("/register")
     @POST
     public Result register(@Body Credentials creds) {
+        if (creds.userName ==  null || creds.userName.isEmpty()) {
+            throw new InvalidRequestException("No username provided");
+        }
+
+        if (creds.password ==  null || creds.password.isEmpty()) {
+            throw new InvalidRequestException("No password provided");
+        }
+
         final User user = usersDAO.insertUser(creds.userName, creds.password);
         final Result result = Results.ok(user);
         result.status(Status.CREATED);
@@ -58,10 +66,19 @@ public class AuthAPI {
      * @param request The request, used to create a session for.
      * @param creds The credentials to authenticate with.
      * @return Appropriate response (code).
+     * @throws InvalidRequestException When no username or no password is provided.
      */
     @Path("/login")
     @POST
     public Result login(Request request, @Body Credentials creds) {
+        if (creds.userName ==  null || creds.userName.isEmpty()) {
+            throw new InvalidRequestException("No username provided");
+        }
+
+        if (creds.password ==  null || creds.password.isEmpty()) {
+            throw new InvalidRequestException("No password provided");
+        }
+
         if (usersDAO.userHasPassword(creds.userName, creds.password)) {
             final User user = usersDAO.getUserByUserName(creds.userName);
 

@@ -20,12 +20,10 @@ public class AuthenticatedTest extends APITest {
         userName = randomString((int) (Math.random() * 4 + 4));
         password = randomString((int) (Math.random() * 8 + 8));
 
-        final User user = new User();
-        user.setUserName(userName);
-        user.setPassword(password);
+        String userBody = String.format("{\"userName\": \"%s\", \"password\": \"%s\"}", userName, password);
 
         given()
-                .body(user)
+                .body(userBody)
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
                 .post("/auth/register")
@@ -33,7 +31,7 @@ public class AuthenticatedTest extends APITest {
                 .statusCode(201);
 
         JsonPath body = given()
-                .body(user)
+                .body(userBody)
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
                 .post("/auth/login")

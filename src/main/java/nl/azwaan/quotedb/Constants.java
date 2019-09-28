@@ -10,7 +10,7 @@ public final class Constants {
     /**
      * Key to hash/sign JWT tokens with.
      */
-    public static final String JWT_HASH_KEY = "SecretToBeMadeConfigurable283475623of2oiergf207834fgwejhrbv";
+    public static final String JWT_HASH_KEY = "auth.jwt.hash.key";
 
     /**
      * JWT property key for storing user id in token.
@@ -23,10 +23,5 @@ public final class Constants {
      * Maximum page size.
      */
     public static final int MAX_PAGE_SIZE = 100;
-
-    /**
-     * User id session property key.
-     */
-    public static final String USER_ID_SESSION_KEY = "loggedin_user_id";
 
 }

@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.typesafe.config.Config;
 import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.dao.UsersDAO;
 import nl.azwaan.quotedb.exceptions.InvalidRequestException;
@@ -29,14 +30,17 @@ public class AuthAPI {
 
     private static final long TWO_DAYS = 1000 * 60 * 60 * 48;
     private UsersDAO usersDAO;
+    private String jwtHashKey;
 
     /**
      * Creates a new {@link User} controller.
      * @param usersDAO The object used to access user resources.
+     * @param conf The configuration object to het hash key from.
      */
     @Inject
-    public AuthAPI(UsersDAO usersDAO) {
+    public AuthAPI(UsersDAO usersDAO, Config conf) {
         this.usersDAO = usersDAO;
+        this.jwtHashKey = conf.getString("auth.jwt.hash.key");
     }
 
     /**
@@ -90,7 +94,7 @@ public class AuthAPI {
             final String signedToken = JWT.create()
                     .withClaim(Constants.JWT_USER_ID_KEY, user.id.toString())
                     .withExpiresAt(date)
-                    .sign(Algorithm.HMAC512(Constants.JWT_HASH_KEY));
+                    .sign(Algorithm.HMAC512(jwtHashKey));
 
             final Token token = new Token();
             token.token = signedToken;

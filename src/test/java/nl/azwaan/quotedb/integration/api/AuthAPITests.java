@@ -3,6 +3,7 @@ package nl.azwaan.quotedb.integration.api;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.typesafe.config.Config;
 import io.requery.EntityStore;
 import io.requery.query.Result;
 import nl.azwaan.quotedb.Constants;
@@ -164,6 +165,8 @@ public class AuthAPITests extends APITest {
         user.setUserName("user1");
         user.setPassword(BCrypt.hashpw("pwd1", BCrypt.gensalt()));
 
+        final Config conf = app.require(Config.class);
+
         store.insert(user);
         store.refresh(user);
 
@@ -173,7 +176,7 @@ public class AuthAPITests extends APITest {
         final String signedToken = JWT.create()
                 .withClaim(Constants.JWT_USER_ID_KEY, user.getId().toString())
                 .withExpiresAt(date)
-                .sign(Algorithm.HMAC512(Constants.JWT_HASH_KEY));
+                .sign(Algorithm.HMAC512(conf.getString(Constants.JWT_HASH_KEY)));
 
         given()
                 .header("Authorization", signedToken)
@@ -187,10 +190,11 @@ public class AuthAPITests extends APITest {
     public void noAPIAccessWithTokenWithoutUserId() {
         final Date date = new Date();
         date.setTime(date.getTime() + 1000 * 60 * 60 * 60);
+        final Config conf = app.require(Config.class);
 
         final String signedToken = JWT.create()
                 .withExpiresAt(date)
-                .sign(Algorithm.HMAC512(Constants.JWT_HASH_KEY));
+                .sign(Algorithm.HMAC512(conf.getString(Constants.JWT_HASH_KEY)));
 
         given()
                 .header("Authorization", signedToken)

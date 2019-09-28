@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.dao.UsersDAO;
+import nl.azwaan.quotedb.exceptions.InvalidRequestException;
 import nl.azwaan.quotedb.models.User;
 import org.jooby.Request;
 import org.jooby.Result;

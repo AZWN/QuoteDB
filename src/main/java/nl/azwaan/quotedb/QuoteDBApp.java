@@ -34,6 +34,7 @@ public class QuoteDBApp extends Jooby {
         get("/", () -> Results.html("index"));
 
         use(new AuthModule());
+        use(new AuthVerificationModule("/api/**"));
         use(new RestAPIModule());
     }
 

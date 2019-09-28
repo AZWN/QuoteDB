@@ -1,4 +1,4 @@
-package nl.azwaan.quotedb.api;
+package nl.azwaan.quotedb.exceptions;
 
 /**
  * Exception to be thrown when an invalid request is made.

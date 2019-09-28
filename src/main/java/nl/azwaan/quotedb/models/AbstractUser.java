@@ -7,7 +7,7 @@ import io.requery.Index;
 import io.requery.Key;
 
 @Entity
-public class AbstractUser {
+public abstract class AbstractUser {
 
     /**
      * User id in database.

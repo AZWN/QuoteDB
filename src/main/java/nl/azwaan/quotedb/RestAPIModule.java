@@ -2,7 +2,6 @@ package nl.azwaan.quotedb;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.inject.Binder;
 import com.typesafe.config.Config;
 import nl.azwaan.quotedb.api.CategoriesAPI;
@@ -13,11 +12,8 @@ import org.jooby.Jooby;
 import org.jooby.Mutant;
 import org.jooby.Router;
 import org.jooby.Status;
-// import org.jooby.Status;
 
 import javax.annotation.Nonnull;
-
-// import static nl.azwaan.quotedb.Constants.USER_ID_SESSION_KEY;
 
 /**
  * Module controlling the REST API ({@code /api/**} routes).
@@ -46,7 +42,7 @@ public class RestAPIModule implements Jooby.Module {
                 return;
             }
 
-            final DecodedJWT decodedToken = JWT.require(Algorithm.HMAC512(Constants.JWT_HASH_KEY))
+            JWT.require(Algorithm.HMAC512(Constants.JWT_HASH_KEY))
                     .build()
                     .verify(authHeader.value());
 

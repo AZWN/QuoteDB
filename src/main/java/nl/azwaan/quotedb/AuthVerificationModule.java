@@ -15,6 +15,7 @@ import java.util.Map;
 public class AuthVerificationModule implements Jooby.Module {
 
     private String endpoints;
+    private String jwtHashKey;
 
     /**
      * Constructs a new module providing authentication varification.
@@ -26,6 +27,8 @@ public class AuthVerificationModule implements Jooby.Module {
 
     @Override
     public void configure(Env env, Config conf, Binder binder) {
+        this.jwtHashKey = conf.getString(Constants.JWT_HASH_KEY);
+
         final Router router = env.router();
         router.use(endpoints, (req, rsp, chain) -> {
             final Mutant authHeader = req.header("Authorization");
@@ -35,7 +38,7 @@ public class AuthVerificationModule implements Jooby.Module {
                 return;
             }
 
-            final DecodedJWT jwt = JWT.require(Algorithm.HMAC512(Constants.JWT_HASH_KEY))
+            final DecodedJWT jwt = JWT.require(Algorithm.HMAC512(jwtHashKey))
                     .build()
                     .verify(authHeader.value());
 

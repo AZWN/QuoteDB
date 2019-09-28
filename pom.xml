@@ -112,7 +112,6 @@
             <version>3.8.2</version>
         </dependency>
 
-
         <!-- Configuration -->
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -265,6 +264,7 @@
                         <include>nl/azwaan/quotedb/*</include>
                         <include>nl/azwaan/quotedb/api/**/*</include>
                         <include>nl/azwaan/quotedb/dao/**/*</include>
+                        <include>nl/azwaan/quotedb/exceptions/**/*</include>
                         <include>nl/azwaan/quotedb/models/AbstractCategory.class</include>
                         <include>nl/azwaan/quotedb/models/AbstractLabel.class</include>
                         <include>nl/azwaan/quotedb/models/AbstractQuote.class</include>

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import nl.azwaan.quotedb.dao.LabelsDAO;
+import nl.azwaan.quotedb.exceptions.ResourceConflictException;
 import nl.azwaan.quotedb.models.Label;
 
 import org.jooby.Result;

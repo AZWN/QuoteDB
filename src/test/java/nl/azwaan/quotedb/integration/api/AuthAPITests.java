@@ -1,13 +1,19 @@
 package nl.azwaan.quotedb.integration.api;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.requery.EntityStore;
 import io.requery.query.Result;
+import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.models.User;
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.Date;
+
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -139,6 +145,85 @@ public class AuthAPITests extends APITest {
                 .assertThat()
                 .statusCode(400)
                 .body("token", equalTo(null));
+    }
+
+    @Test
+    public void noAPIAccessWithInvalidTokenString() {
+        given()
+                .header("Authorization", "someThingThatIsNotAJWTToken")
+                .get("/api/labels")
+                .then()
+                .assertThat()
+                .statusCode(401);
+    }
+
+    @Test
+    public void noAPIAccessWithOldTokenString() {
+        final EntityStore store = app.require(EntityStore.class);
+        User user = new User();
+        user.setUserName("user1");
+        user.setPassword(BCrypt.hashpw("pwd1", BCrypt.gensalt()));
+
+        store.insert(user);
+        store.refresh(user);
+
+        final Date date = new Date();
+        date.setTime(date.getTime() - 1000 * 60 * 60 * 60);
+
+        final String signedToken = JWT.create()
+                .withClaim(Constants.JWT_USER_ID_KEY, user.getId().toString())
+                .withExpiresAt(date)
+                .sign(Algorithm.HMAC512(Constants.JWT_HASH_KEY));
+
+        given()
+                .header("Authorization", signedToken)
+                .get("/api/labels")
+                .then()
+                .assertThat()
+                .statusCode(401);
+    }
+
+    @Test
+    public void noAPIAccessWithTokenWithoutUserId() {
+        final Date date = new Date();
+        date.setTime(date.getTime() + 1000 * 60 * 60 * 60);
+
+        final String signedToken = JWT.create()
+                .withExpiresAt(date)
+                .sign(Algorithm.HMAC512(Constants.JWT_HASH_KEY));
+
+        given()
+                .header("Authorization", signedToken)
+                .get("/api/labels")
+                .then()
+                .assertThat()
+                .statusCode(401);
+    }
+
+    @Test
+    public void noAPIAccessWithInvalidSignature() {
+        final EntityStore store = app.require(EntityStore.class);
+        User user = new User();
+        user.setUserName("user1");
+        user.setPassword(BCrypt.hashpw("pwd1", BCrypt.gensalt()));
+
+        store.insert(user);
+        store.refresh(user);
+
+        final Date date = new Date();
+        date.setTime(date.getTime() + 1000 * 60 * 60 * 60);
+
+        final String signedToken = JWT.create()
+                .withClaim(Constants.JWT_USER_ID_KEY, user.getId().toString())
+                .withExpiresAt(date)
+                .sign(Algorithm.HMAC512("mykey"));
+
+        given()
+                .header("Authorization", signedToken)
+                .get("/api/labels")
+                .then()
+                .assertThat()
+                .statusCode(401);
     }
 
 }

@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.requery.EntityStore;
 import io.requery.Persistable;
-import nl.azwaan.quotedb.api.ResourceConflictException;
+import nl.azwaan.quotedb.exceptions.ResourceConflictException;
 import nl.azwaan.quotedb.models.User;
 import org.mindrot.jbcrypt.BCrypt;
 

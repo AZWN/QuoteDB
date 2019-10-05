@@ -15,7 +15,7 @@ public class QuoteAPITests extends AuthenticatedTest {
                 .get("/api/quotes")
                 .then()
                 .assertThat()
-                .body("size()", equalTo(0));
+                .body("data.size()", equalTo(0));
     }
 
     @Test
@@ -26,9 +26,9 @@ public class QuoteAPITests extends AuthenticatedTest {
                 .get("/api/quotes")
                 .then()
                 .assertThat()
-                .body("size()", equalTo(100))
-                .and().body("[0].text", equalTo("TestQuote1"))
-                .and().body("[99].text", equalTo("TestQuote100"));
+                .body("data.size()", equalTo(100))
+                .and().body("data[0].text", equalTo("TestQuote1"))
+                .and().body("data[99].text", equalTo("TestQuote100"));
 
     }
 
@@ -39,9 +39,9 @@ public class QuoteAPITests extends AuthenticatedTest {
                 .get("/api/quotes?page=2")
                 .then()
                 .assertThat()
-                .body("size()", equalTo(20))
-                .and().body("[0].text", equalTo("TestQuote101"))
-                .and().body("[19].text", equalTo("TestQuote120"));
+                .body("data.size()", equalTo(20))
+                .and().body("data[0].text", equalTo("TestQuote101"))
+                .and().body("data[19].text", equalTo("TestQuote120"));
 
     }
 
@@ -52,9 +52,9 @@ public class QuoteAPITests extends AuthenticatedTest {
                 .get("/api/quotes?page=2&pageSize=20")
                 .then()
                 .assertThat()
-                .body("size()", equalTo(20))
-                .and().body("[0].text", equalTo("TestQuote21"))
-                .and().body("[19].text", equalTo("TestQuote40"));
+                .body("data.size()", equalTo(20))
+                .and().body("data[0].text", equalTo("TestQuote21"))
+                .and().body("data[19].text", equalTo("TestQuote40"));
 
     }
 

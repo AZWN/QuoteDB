@@ -26,10 +26,10 @@ public class LabelAPITests extends AuthenticatedTest {
         EntityStore store = app.require(EntityStore.class);
 
         Label label1 = new Label();
-        label1.labelName = "Label1";
+        label1.setLabelName("Label1");
 
         Label label2 = new Label();
-        label2.labelName = "Label2";
+        label2.setLabelName("Label2");
 
         store.insert(label1);
         store.insert(label2);
@@ -65,7 +65,7 @@ public class LabelAPITests extends AuthenticatedTest {
                 .findFirst()
                 .get();
 
-        assertThat(lbl.labelName, equalTo("Label3"));
+        assertThat(lbl.getLabelName(), equalTo("Label3"));
     }
 
     @Test

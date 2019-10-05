@@ -265,9 +265,8 @@
                         <include>nl/azwaan/quotedb/api/**/*</include>
                         <include>nl/azwaan/quotedb/dao/**/*</include>
                         <include>nl/azwaan/quotedb/exceptions/**/*</include>
-                        <include>nl/azwaan/quotedb/models/AbstractLabel.class</include>
-                        <include>nl/azwaan/quotedb/models/AbstractQuote.class</include>
-                        <include>nl/azwaan/quotedb/models/AbstractUser.class</include>
+                        <include>nl/azwaan/quotedb/models/Abstract**</include>
+                        <include>nl/azwaan/quotedb/models/Base**</include>
                     </includes>
                 </configuration>
             </plugin>

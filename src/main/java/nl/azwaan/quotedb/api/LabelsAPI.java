@@ -60,11 +60,11 @@ public class LabelsAPI {
     @POST
     @Path("")
     public Result addLabel(@Body Label label) {
-        if (labelsDAO.labelExists(label.labelName)) {
-            throw new ResourceConflictException("Label with name '%s' already exists", label.labelName);
+        if (labelsDAO.labelExists(label.getLabelName())) {
+            throw new ResourceConflictException("Label with name '%s' already exists", label.getLabelName());
         }
 
-        final Label lbl = labelsDAO.createLabel(label.labelName);
+        final Label lbl = labelsDAO.createLabel(label.getLabelName());
         final Result res = Results.ok(lbl);
         res.status(Status.CREATED);
         return res;

@@ -45,7 +45,7 @@ public class LabelsDAO {
      */
     public Label createLabel(String labelName) {
         final Label label = new Label();
-        label.labelName = labelName;
+        label.setLabelName(labelName);
 
         labelEntityStore.insert(label);
         labelEntityStore.refresh(label);

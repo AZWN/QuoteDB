@@ -28,12 +28,14 @@ public abstract class AbstractAuthor extends BaseModel {
      *                 .replace("{middleName}", middleName)
      *                 .replace("{lastName}", lastName)
      *                 .replace("{initials}", initials)
+     *                 .replace("  ", " ")
      * }</pre>
      */
     public String formatFullName(String format) {
         return format.replace("{firstName}", firstName)
                 .replace("{middleName}", middleName)
                 .replace("{lastName}", lastName)
-                .replace("{initials}", initials);
+                .replace("{initials}", initials)
+                .replace("  ", " ");
     }
 }

@@ -2,7 +2,6 @@ package nl.azwaan.quotedb;
 
 import com.google.inject.Binder;
 import com.typesafe.config.Config;
-import nl.azwaan.quotedb.api.CategoriesAPI;
 import nl.azwaan.quotedb.api.LabelsAPI;
 import nl.azwaan.quotedb.api.QuotesAPI;
 import org.jooby.Env;
@@ -19,7 +18,7 @@ import javax.annotation.Nonnull;
 public class RestAPIModule implements Jooby.Module {
 
     /**
-     * Configures REST API by adding {@link QuotesAPI}, {@link CategoriesAPI} and {@link LabelsAPI} modules.
+     * Configures REST API by adding {@link QuotesAPI} and {@link LabelsAPI} modules.
      * @param env The environment the module is configured in
      * @param conf The configuration for the module. Currently not used
      * @param binder The Guice binder. Currently not used.
@@ -31,7 +30,6 @@ public class RestAPIModule implements Jooby.Module {
     {
         final Router router = env.router();
 
-        router.use("/api", CategoriesAPI.class);
         router.use("/api", QuotesAPI.class);
         router.use("/api", LabelsAPI.class);
     }

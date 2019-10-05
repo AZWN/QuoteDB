@@ -17,18 +17,18 @@ public abstract class BaseQuote extends BaseModel {
     /**
      * Quote text.
      */
-    public String text;
+    protected String text;
 
     /**
      * Optional note to add to the quote.
      */
-    public String note;
+    protected String note;
 
     /**
      * Labels attached to this quote.
      */
     @ManyToMany
     @JunctionTable
-    public Set<Label> labels;
+    protected Set<Label> labels;
 
 }

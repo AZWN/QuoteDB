@@ -11,11 +11,11 @@ public abstract class AbstractUser extends BaseModel {
      * Username.
      */
     @Index
-    public String userName;
+    protected String userName;
 
     /**
      * Bcrypt hashed password.
      */
     @JsonIgnore
-    public String password;
+    protected String password;
 }

@@ -17,5 +17,5 @@ public abstract class AbstractLabel extends BaseModel {
      */
     @Index
     @Column(unique = true)
-    public String labelName;
+    protected String labelName;
 }

@@ -3,7 +3,7 @@ package nl.azwaan.quotedb.api;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.azwaan.quotedb.dao.QuotesDAO;
-import nl.azwaan.quotedb.models.Quote;
+import nl.azwaan.quotedb.models.QuickQuote;
 import org.jooby.Result;
 import org.jooby.Results;
 import org.jooby.Status;
@@ -27,7 +27,7 @@ import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
 @Path("/quotes")
 @Produces("application/json")
 @Consumes("application/json")
-public class QuotesAPI {
+public class QuotesAPI extends BaseAPI {
 
     private QuotesDAO quotesDAO;
 
@@ -48,7 +48,7 @@ public class QuotesAPI {
      */
     @GET
     @Path("/")
-    public Stream<Quote> getAll(Optional<Integer> page, Optional<Integer> pageSize) {
+    public Stream<QuickQuote> getAll(Optional<Integer> page, Optional<Integer> pageSize) {
         return quotesDAO.getAllQuotes(page.orElse(1), pageSize.orElse(MAX_PAGE_SIZE));
     }
 
@@ -60,8 +60,8 @@ public class QuotesAPI {
      */
     @POST
     @Path("/")
-    public Result insertQuote(Quote quote) {
-        final Quote generatedQuote = quotesDAO.createQuote(quote);
+    public Result insertQuote(QuickQuote quote) {
+        final QuickQuote generatedQuote = quotesDAO.createQuote(quote);
         final Result res = Results.ok(generatedQuote);
         res.status(Status.CREATED);
         return res;

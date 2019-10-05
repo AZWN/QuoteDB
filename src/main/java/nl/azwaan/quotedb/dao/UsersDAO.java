@@ -14,17 +14,20 @@ import org.mindrot.jbcrypt.BCrypt;
  * @author Aron Zwaan
  */
 @Singleton
-public class UsersDAO {
-
-    private EntityStore<Persistable, User> usersEntityStore;
+public class UsersDAO extends BaseDAO<User> {
 
     /**
      * Constructs new {@link UsersDAO}.
-     * @param usersEntityStore The {@link EntityStore} used to access the database.
+     * @param store The {@link EntityStore} used to access the database.
      */
     @Inject
-    public UsersDAO(EntityStore<Persistable, User> usersEntityStore) {
-        this.usersEntityStore = usersEntityStore;
+    public UsersDAO(EntityStore<Persistable, User> store) {
+        super(store);
+    }
+
+    @Override
+    protected Class<User> getEntityClass() {
+        return User.class;
     }
 
     /**
@@ -45,8 +48,8 @@ public class UsersDAO {
         newUser.setUserName(userName);
         newUser.setPassword(hashedPassword);
 
-        usersEntityStore.insert(newUser);
-        usersEntityStore.refresh(newUser);
+        store.insert(newUser);
+        store.refresh(newUser);
 
         return newUser;
     }
@@ -62,7 +65,7 @@ public class UsersDAO {
             return false;
         }
 
-        final User user = usersEntityStore.select(User.class)
+        final User user = selectQuery()
                 .where(User.USER_NAME.eq(userName))
                 .get()
                 .first();
@@ -76,7 +79,7 @@ public class UsersDAO {
      * @return true is the username is in use, false otherwise.
      */
     public boolean userNameExists(String userName) {
-        return usersEntityStore.select(User.class)
+        return selectQuery()
                 .where(User.USER_NAME.eq(userName))
                 .get()
                 .stream()
@@ -90,7 +93,7 @@ public class UsersDAO {
      * @return The associated User object
      */
     public User getUserByUserName(String userName) {
-        return usersEntityStore.select(User.class)
+        return selectQuery()
                 .where(User.USER_NAME.eq(userName))
                 .get()
                 .first();

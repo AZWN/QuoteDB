@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 @Path("/labels")
 @Produces("application/json")
 @Consumes("application/json")
-public class LabelsAPI {
+public class LabelsAPI extends BaseAPI {
 
     private LabelsDAO labelsDAO;
 
@@ -48,7 +48,7 @@ public class LabelsAPI {
     @GET
     @Path("")
     public Stream<Label> getAll() {
-        return labelsDAO.getLabels();
+        return labelsDAO.getAll();
     }
 
 

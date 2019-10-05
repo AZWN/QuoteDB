@@ -2,7 +2,7 @@ package nl.azwaan.quotedb.integration.api;
 
 import io.requery.EntityStore;
 import io.restassured.http.ContentType;
-import nl.azwaan.quotedb.models.Quote;
+import nl.azwaan.quotedb.models.QuickQuote;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class QuoteAPITests extends AuthenticatedTest {
 
     @Test
-    public void testGetLabelsNoLabels() throws Throwable {
+    public void testGetLabelsNoLabels() {
         getBase()
                 .get("/api/quotes")
                 .then()
@@ -81,7 +81,7 @@ public class QuoteAPITests extends AuthenticatedTest {
 
     @Test
     public void testCreateQuote() {
-        Quote quote = new Quote();
+        QuickQuote quote = new QuickQuote();
         quote.setText("My super fancy quote");
 
         postBase()
@@ -98,7 +98,7 @@ public class QuoteAPITests extends AuthenticatedTest {
         EntityStore store = app.require(EntityStore.class);
 
         for (int i = 1; i <= quoteCount; i++) {
-            Quote quote = new Quote();
+            QuickQuote quote = new QuickQuote();
             quote.setText(String.format("TestQuote%d", i));
 
             store.insert(quote);

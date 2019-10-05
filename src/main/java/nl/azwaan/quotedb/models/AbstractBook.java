@@ -1,20 +1,15 @@
 package nl.azwaan.quotedb.models;
 
 import io.requery.Entity;
-import io.requery.Key;
+import io.requery.Index;
 import io.requery.ManyToOne;
 
 import java.util.Date;
 
 @Entity
-public class AbstractBook {
+public abstract class AbstractBook extends BaseModel {
 
-    /**
-     * Unique author identifier.
-     */
-    @Key
-    protected Long id;
-
+    @Index
     protected String title;
 
     protected String publisher;

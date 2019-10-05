@@ -6,35 +6,26 @@ import io.requery.EntityStore;
 import io.requery.Persistable;
 import nl.azwaan.quotedb.models.Label;
 
-import java.util.stream.Stream;
-
 /**
  * Class defining methods to access labels.
  *
  * @author Aron Zwaan
  */
 @Singleton
-public class LabelsDAO {
-
-    private EntityStore<Persistable, Label> labelEntityStore;
+public class LabelsDAO extends BaseDAO<Label> {
 
     /**
      * Constructs new {@link LabelsDAO}.
-     * @param labelEntityStore The {@link EntityStore} used to access the database.
+     * @param store The {@link EntityStore} used to access the database.
      */
     @Inject
-    public LabelsDAO(EntityStore<Persistable, Label> labelEntityStore) {
-        this.labelEntityStore = labelEntityStore;
+    public LabelsDAO(EntityStore<Persistable, Label> store) {
+        super(store);
     }
 
-    /**
-     * Returns all labels.
-     * @return A {@link Stream} supplying all labels in the database.
-     */
-    public Stream<Label> getLabels() {
-        return labelEntityStore.select(Label.class)
-                .get()
-                .stream();
+    @Override
+    protected Class<Label> getEntityClass() {
+        return Label.class;
     }
 
     /**
@@ -47,8 +38,8 @@ public class LabelsDAO {
         final Label label = new Label();
         label.setLabelName(labelName);
 
-        labelEntityStore.insert(label);
-        labelEntityStore.refresh(label);
+        store.insert(label);
+        store.refresh(label);
 
         return label;
     }
@@ -60,7 +51,7 @@ public class LabelsDAO {
      * @return {@code true} if a label with name labelName already exists, {@code false} otherwise.
      */
     public boolean labelExists(String labelName) {
-        return labelEntityStore.select(Label.class)
+        return store.select(Label.class)
                 .where(Label.LABEL_NAME.eq(labelName))
                 .limit(1)
                 .get()

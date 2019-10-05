@@ -83,8 +83,6 @@ public class QuoteAPITests extends AuthenticatedTest {
     public void testCreateQuote() {
         Quote quote = new Quote();
         quote.setText("My super fancy quote");
-        quote.setSource("Test");
-        quote.setAuthor("Who could this be??");
 
         postBase()
                 .body(quote)
@@ -101,8 +99,6 @@ public class QuoteAPITests extends AuthenticatedTest {
 
         for (int i = 1; i <= quoteCount; i++) {
             Quote quote = new Quote();
-            quote.setAuthor("Test");
-            quote.setSource("test");
             quote.setText(String.format("TestQuote%d", i));
 
             store.insert(quote);

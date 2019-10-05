@@ -24,7 +24,7 @@ import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
  * @author Aron Zwaan
  */
 @Singleton
-@Path("/categories/:categoryId/quotes")
+@Path("/quotes")
 @Produces("application/json")
 @Consumes("application/json")
 public class QuotesAPI {
@@ -42,15 +42,14 @@ public class QuotesAPI {
 
     /**
      * Returns all quotes in a category.
-     * @param categoryId The id of the category to search in.
      * @param page The page number (default: 1).
      * @param pageSize The page size (default: {@code MAX_PAGE_SIZE}).
      * @return A stream with the selected page of quotes.
      */
     @GET
     @Path("/")
-    public Stream<Quote> getAll(long categoryId, Optional<Integer> page, Optional<Integer> pageSize) {
-        return quotesDAO.getAllQuotes(categoryId, page.orElse(1), pageSize.orElse(MAX_PAGE_SIZE));
+    public Stream<Quote> getAll(Optional<Integer> page, Optional<Integer> pageSize) {
+        return quotesDAO.getAllQuotes(page.orElse(1), pageSize.orElse(MAX_PAGE_SIZE));
     }
 
     /**

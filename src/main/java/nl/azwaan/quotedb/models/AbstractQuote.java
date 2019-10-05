@@ -4,7 +4,6 @@ import io.requery.Entity;
 import io.requery.Generated;
 import io.requery.Key;
 import io.requery.ManyToMany;
-import io.requery.ManyToOne;
 import io.requery.JunctionTable;
 import io.requery.PreInsert;
 
@@ -40,12 +39,6 @@ public abstract class AbstractQuote {
      * AbstractQuote source.
      */
     public String source;
-
-    /**
-     * Category to which this quote belongs.
-     */
-    @ManyToOne
-    public Category category;
 
     /**
      * Labels attached to this quote.

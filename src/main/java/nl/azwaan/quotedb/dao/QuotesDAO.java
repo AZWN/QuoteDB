@@ -33,18 +33,16 @@ public class QuotesDAO {
     /**
      * Returnes all quotes in a category.
      *
-     * @param categoryId The category to select quotes from.
      * @param page The page number
      * @param pageSize The page size
      * @return The quotes in the selected category and page.
      */
-    public Stream<Quote> getAllQuotes(long categoryId, int page, int pageSize) {
+    public Stream<Quote> getAllQuotes(int page, int pageSize) {
         if (pageSize < 1 || pageSize > MAX_PAGE_SIZE) {
             throw new IllegalArgumentException("pageSize must be between 1 and 100 (inclusive)");
         }
 
         return quotesEntityStore.select(Quote.class)
-                .where(Quote.CATEGORY_ID.eq(categoryId))
                 .orderBy(Quote.GENERATION_DATE.asc(), Quote.ID.asc())
                 .limit(page * pageSize)
                 .get()

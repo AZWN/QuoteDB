@@ -1,11 +1,17 @@
 package nl.azwaan.quotedb.integration.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.requery.EntityStore;
+import io.requery.Persistable;
 import io.restassured.http.ContentType;
 import nl.azwaan.quotedb.models.QuickQuote;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.equalTo;
+import java.io.IOException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class QuoteAPITests extends AuthenticatedTest {
 
@@ -80,9 +86,11 @@ public class QuoteAPITests extends AuthenticatedTest {
     }
 
     @Test
-    public void testCreateQuote() {
+    public void testCreateQuote() throws IOException {
         QuickQuote quote = new QuickQuote();
         quote.setText("My super fancy quote");
+        quote.setNote("Note");
+        quote.setTitle("Quote title");
 
         postBase()
                 .body(quote)
@@ -91,6 +99,19 @@ public class QuoteAPITests extends AuthenticatedTest {
                 .assertThat()
                 .contentType(ContentType.JSON)
                 .statusCode(201);
+
+        EntityStore<Persistable, QuickQuote> store = app.require(EntityStore.class);
+        QuickQuote result = store.select(QuickQuote.class)
+                .get()
+                .first();
+
+        assertThat(result.getText(), equalTo("My super fancy quote"));
+        assertThat(result.getNote(), equalTo("Note"));
+        assertThat(result.getTitle(), equalTo("Quote title"));
+
+        assertThat(result.getId(), is(not(nullValue())));
+        assertThat(result.getGenerationDate(), is(not(nullValue())));
+        assertThat(result.getLastModifiedDate(), is(not(nullValue())));
     }
 
 

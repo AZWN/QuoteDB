@@ -21,3 +21,4 @@ bin
 pom.xml.versionsBackup
 jacoco.exec
 local_dev.db
+curl/

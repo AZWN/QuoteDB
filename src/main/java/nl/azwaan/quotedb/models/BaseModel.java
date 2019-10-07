@@ -1,5 +1,6 @@
 package nl.azwaan.quotedb.models;
 
+import io.requery.Column;
 import io.requery.Generated;
 import io.requery.Key;
 import io.requery.PreInsert;
@@ -16,11 +17,13 @@ public abstract class BaseModel {
      */
     @Key
     @Generated
+    @Column(nullable = false)
     protected Long id;
 
     /**
      * The date this entity was saved.
      */
+    @Column(nullable = false)
     protected Date generationDate;
 
     /**
@@ -35,6 +38,7 @@ public abstract class BaseModel {
     /**
      * The date this entity was last updated.
      */
+    @Column(nullable = false)
     protected Date lastModifiedDate;
 
     /**

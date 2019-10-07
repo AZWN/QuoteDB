@@ -121,6 +121,7 @@ public class QuoteAPITests extends AuthenticatedTest {
         for (int i = 1; i <= quoteCount; i++) {
             QuickQuote quote = new QuickQuote();
             quote.setText(String.format("TestQuote%d", i));
+            quote.setTitle(String.format("Title%d", i));
 
             store.insert(quote);
         }

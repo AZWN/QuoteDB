@@ -8,6 +8,7 @@ import org.jooby.Request;
 import org.jooby.Result;
 import org.jooby.Results;
 import org.jooby.Status;
+import org.jooby.mvc.Body;
 import org.jooby.mvc.Consumes;
 import org.jooby.mvc.GET;
 import org.jooby.mvc.POST;
@@ -55,7 +56,7 @@ public class QuotesAPI extends BaseAPI {
      */
     @POST
     @Path("/")
-    public Result insertQuote(QuickQuote quote) {
+    public Result insertQuote(@Body QuickQuote quote) {
         final QuickQuote generatedQuote = quotesDAO.createQuote(quote);
         final Result res = Results.ok(generatedQuote);
         res.status(Status.CREATED);

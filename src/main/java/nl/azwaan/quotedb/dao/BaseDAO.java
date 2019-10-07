@@ -13,8 +13,8 @@ public abstract class BaseDAO<T extends Persistable> {
     protected EntityStore<Persistable, T> store;
 
     /**
-     * constructs a {@link BaseDAO}.
-     * @param store The sotre used to access and manipulate entities.
+     * Constructs a {@link BaseDAO}.
+     * @param store The store used to access and manipulate entities.
      */
     public BaseDAO(EntityStore<Persistable, T> store) {
         this.store = store;

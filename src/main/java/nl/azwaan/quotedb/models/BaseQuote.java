@@ -1,5 +1,6 @@
 package nl.azwaan.quotedb.models;
 
+import io.requery.Column;
 import io.requery.JunctionTable;
 import io.requery.ManyToMany;
 import io.requery.Superclass;
@@ -12,11 +13,13 @@ public abstract class BaseQuote extends BaseModel {
     /**
      * Quote name/title.
      */
+    @Column(nullable = false)
     protected String title;
 
     /**
      * Quote text.
      */
+    @Column(nullable = false)
     protected String text;
 
     /**

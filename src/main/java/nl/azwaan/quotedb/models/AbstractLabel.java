@@ -16,6 +16,6 @@ public abstract class AbstractLabel extends BaseModel {
      * Label name. Is unique, which means a label can never be inserted twice.
      */
     @Index
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     protected String labelName;
 }

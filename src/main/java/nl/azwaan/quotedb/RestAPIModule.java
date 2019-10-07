@@ -2,6 +2,9 @@ package nl.azwaan.quotedb;
 
 import com.google.inject.Binder;
 import com.typesafe.config.Config;
+import nl.azwaan.quotedb.api.AuthorsAPI;
+import nl.azwaan.quotedb.api.BookQuotesAPI;
+import nl.azwaan.quotedb.api.BooksAPI;
 import nl.azwaan.quotedb.api.LabelsAPI;
 import nl.azwaan.quotedb.api.QuotesAPI;
 import org.jooby.Env;
@@ -32,5 +35,8 @@ public class RestAPIModule implements Jooby.Module {
 
         router.use("/api", QuotesAPI.class);
         router.use("/api", LabelsAPI.class);
+        router.use("/api", AuthorsAPI.class);
+        router.use("/api", BooksAPI.class);
+        router.use("/api", BookQuotesAPI.class);
     }
 }

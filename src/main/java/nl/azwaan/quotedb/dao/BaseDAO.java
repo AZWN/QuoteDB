@@ -41,7 +41,7 @@ public abstract class BaseDAO<T extends Persistable> {
      * Returns a runtime {@link Class} value for T. Used t build base queries with.
      * @return a runtime {@link Class} value for T
      */
-    protected abstract Class<T> getEntityClass();
+    public abstract Class<T> getEntityClass();
 
     /**
      * Returns all entities of this type in the database.
@@ -53,4 +53,13 @@ public abstract class BaseDAO<T extends Persistable> {
                 .stream();
     }
 
+    /**
+     * Inserts a new entity into the database.
+     * @param entity The entity to be inserted.
+     * @return The inserted entity.
+     */
+    public T insertEntity(T entity) {
+        store.insert(entity);
+        return store.refresh(entity);
+    }
 }

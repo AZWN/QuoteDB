@@ -2,8 +2,11 @@ package nl.azwaan.quotedb.models;
 
 import io.requery.Column;
 import io.requery.Entity;
+import io.requery.Lazy;
+import io.requery.OneToMany;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public abstract class AbstractAuthor extends BaseModel {
@@ -24,6 +27,10 @@ public abstract class AbstractAuthor extends BaseModel {
     protected Date dateOfBirth;
 
     protected String biography;
+
+    @OneToMany
+    @Lazy
+    protected Set<Book> books;
 
     /**
      * Returns the full name in the specified format.

@@ -11,7 +11,6 @@ import org.jooby.Results;
 import org.jooby.Status;
 import org.jooby.mvc.Body;
 import org.jooby.mvc.Consumes;
-import org.jooby.mvc.GET;
 import org.jooby.mvc.POST;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
@@ -27,7 +26,7 @@ import java.util.HashMap;
 @Path("/quotes")
 @Produces("application/json")
 @Consumes("application/json")
-public class QuotesAPI extends BaseAPI {
+public class QuotesAPI extends BaseAPI<QuickQuote> {
 
     private QuotesDAO quotesDAO;
 
@@ -37,18 +36,8 @@ public class QuotesAPI extends BaseAPI {
      */
     @Inject
     public QuotesAPI(QuotesDAO quotesDAO) {
+        super(quotesDAO);
         this.quotesDAO = quotesDAO;
-    }
-
-    /**
-     * Returns all quotes in a category.
-     * @param req The request to be served.
-     * @return A stream with the selected page of quotes.
-     */
-    @GET
-    @Path("/")
-    public MultiResultPage<QuickQuote> getAll(Request req) {
-        return getPagedResult(req, quotesDAO, s -> s);
     }
 
     /**
@@ -61,7 +50,7 @@ public class QuotesAPI extends BaseAPI {
     @POST
     @Path("/")
     public Result insertQuote(@Body QuickQuote quote, Request req) {
-        final QuickQuote generatedQuote = quotesDAO.createQuote(quote);
+        final QuickQuote generatedQuote = quotesDAO.insertEntity(quote);
 
         final String link = new URIBuilderTiny(req.path())
                 .setQueryParameters(new HashMap<>())

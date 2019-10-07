@@ -48,4 +48,9 @@ public abstract class BaseModel {
     protected void setLastModifiedDate() {
         lastModifiedDate = new Date();
     }
+
+    /**
+     * @return Returns the id of the entity.
+     */
+    public abstract Long getId();
 }

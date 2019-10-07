@@ -14,7 +14,9 @@ import org.mindrot.jbcrypt.BCrypt;
  * @author Aron Zwaan
  */
 @Singleton
-public class UsersDAO extends BaseDAO<User> {
+public class UsersDAO {
+
+    private final EntityStore<Persistable, User> store;
 
     /**
      * Constructs new {@link UsersDAO}.
@@ -22,12 +24,7 @@ public class UsersDAO extends BaseDAO<User> {
      */
     @Inject
     public UsersDAO(EntityStore<Persistable, User> store) {
-        super(store);
-    }
-
-    @Override
-    protected Class<User> getEntityClass() {
-        return User.class;
+        this.store = store;
     }
 
     /**
@@ -65,7 +62,7 @@ public class UsersDAO extends BaseDAO<User> {
             return false;
         }
 
-        final User user = selectQuery()
+        final User user = store.select(User.class)
                 .where(User.USER_NAME.eq(userName))
                 .get()
                 .first();
@@ -79,7 +76,7 @@ public class UsersDAO extends BaseDAO<User> {
      * @return true is the username is in use, false otherwise.
      */
     public boolean userNameExists(String userName) {
-        return selectQuery()
+        return store.select(User.class)
                 .where(User.USER_NAME.eq(userName))
                 .get()
                 .stream()
@@ -93,7 +90,7 @@ public class UsersDAO extends BaseDAO<User> {
      * @return The associated User object
      */
     public User getUserByUserName(String userName) {
-        return selectQuery()
+        return store.select(User.class)
                 .where(User.USER_NAME.eq(userName))
                 .get()
                 .first();

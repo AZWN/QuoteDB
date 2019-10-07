@@ -49,8 +49,8 @@ public class LabelAPITests extends AuthenticatedTest {
     public void testAddLabel() throws Throwable {
         EntityStore store = app.require(EntityStore.class);
 
-        LabelParam param = new LabelParam();
-        param.labelName = "Label3";
+        Label param = new Label();
+        param.setLabelName("Label3");
 
         postBase()
                 .body(param)

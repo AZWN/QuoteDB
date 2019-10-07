@@ -21,7 +21,7 @@ public class BooksDAO extends BaseDAO<Book> {
     }
 
     @Override
-    protected Class<Book> getEntityClass() {
+    public Class<Book> getEntityClass() {
         return Book.class;
     }
 

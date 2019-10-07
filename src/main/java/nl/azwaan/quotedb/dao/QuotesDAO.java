@@ -29,7 +29,7 @@ public class QuotesDAO extends BaseDAO<QuickQuote> {
     }
 
     @Override
-    protected Class<QuickQuote> getEntityClass() {
+    public Class<QuickQuote> getEntityClass() {
         return QuickQuote.class;
     }
 
@@ -51,18 +51,6 @@ public class QuotesDAO extends BaseDAO<QuickQuote> {
                 .get()
                 .stream()
                 .skip((page - 1) * pageSize);
-    }
-
-    /**
-     * Creates a new quote.
-     *
-     * @param quote The quote to create
-     * @return The created quote
-     */
-    public QuickQuote createQuote(QuickQuote quote) {
-        store.insert(quote);
-        store.refresh(quote);
-        return quote;
     }
 
 }

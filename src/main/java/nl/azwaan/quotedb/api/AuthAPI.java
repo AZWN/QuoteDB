@@ -26,7 +26,7 @@ import java.util.Date;
 @Path("/auth")
 @Produces("application/json")
 @Consumes("application/json")
-public class AuthAPI extends BaseAPI {
+public class AuthAPI {
 
     private static final long TWO_DAYS = 1000 * 60 * 60 * 48;
     private UsersDAO usersDAO;

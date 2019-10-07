@@ -24,24 +24,8 @@ public class LabelsDAO extends BaseDAO<Label> {
     }
 
     @Override
-    protected Class<Label> getEntityClass() {
+    public Class<Label> getEntityClass() {
         return Label.class;
-    }
-
-    /**
-     * Creates a new label. Does not check if a label with name labelName already exists.
-     *
-     * @param labelName The name of the new label.
-     * @return The Generated label entity.
-     */
-    public Label createLabel(String labelName) {
-        final Label label = new Label();
-        label.setLabelName(labelName);
-
-        store.insert(label);
-        store.refresh(label);
-
-        return label;
     }
 
     /**

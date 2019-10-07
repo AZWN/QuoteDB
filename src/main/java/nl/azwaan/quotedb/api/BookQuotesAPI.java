@@ -2,7 +2,7 @@ package nl.azwaan.quotedb.api;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.azwaan.quotedb.dao.BaseDAO;
+import nl.azwaan.quotedb.dao.BookQuotesDAO;
 import nl.azwaan.quotedb.models.BookQuote;
 import org.jooby.mvc.Consumes;
 import org.jooby.mvc.Path;
@@ -15,7 +15,7 @@ import org.jooby.mvc.Produces;
 public class BookQuotesAPI extends BaseAPI<BookQuote> {
 
     @Inject
-    protected BookQuotesAPI(BaseDAO<BookQuote> dao) {
+    protected BookQuotesAPI(BookQuotesDAO dao) {
         super(dao);
     }
 }

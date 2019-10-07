@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.requery.EntityStore;
 import io.requery.Persistable;
+import io.requery.meta.NumericAttribute;
 import nl.azwaan.quotedb.models.Label;
 
 /**
@@ -26,6 +27,11 @@ public class LabelsDAO extends BaseDAO<Label> {
     @Override
     public Class<Label> getEntityClass() {
         return Label.class;
+    }
+
+    @Override
+    public NumericAttribute<Label, Long> getIDProperty() {
+        return Label.ID;
     }
 
     /**

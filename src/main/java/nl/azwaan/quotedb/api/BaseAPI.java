@@ -7,6 +7,7 @@ import io.requery.query.Selection;
 import net.moznion.uribuildertiny.URIBuilderTiny;
 import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.dao.BaseDAO;
+import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
 import nl.azwaan.quotedb.models.BaseModel;
 import org.jooby.Request;
 import org.jooby.Results;
@@ -89,16 +90,36 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
 
         final T e = dao.insertEntity(entity);
 
-        final String link = new URIBuilderTiny(req.path())
-                .setQueryParameters(new HashMap<>())
-                .appendPaths(e.getId())
-                .build()
-                .toString();
+        final String link = getEntityURL(req, e.getId());
 
         final SingleResultPage<T> resultPage = new SingleResultPage<>(e, link);
 
         return Results.with(resultPage, Status.CREATED);
     }
 
+    private String getEntityURL(Request req, Object... e) {
+        return new URIBuilderTiny(req.path())
+                    .setQueryParameters(new HashMap<>())
+                    .appendPaths(e)
+                    .build()
+                    .toString();
+    }
+
     protected void checkCanInsertEntity(T entity) { }
+
+    /**
+     * Gets a single entity.
+     * @param req The request that is to be handled.
+     * @param id The id of the entity as part of the URL.
+     *
+     * @return A page with the found entity as result.
+     */
+    @GET
+    @Path("/:id")
+    public SingleResultPage<T> getSingleEntity(Request req, Long id) {
+        final T entity = dao.getEntityById(id)
+                .orElseThrow(() -> new EntityNotFoundException(dao.getEntityClass().getName(), id));
+
+        return new SingleResultPage<T>(entity, getEntityURL(req));
+    }
 }

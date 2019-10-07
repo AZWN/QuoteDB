@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.requery.EntityStore;
 import io.requery.Persistable;
+import io.requery.meta.NumericAttribute;
 import nl.azwaan.quotedb.models.QuickQuote;
 
 import java.util.stream.Stream;
@@ -31,6 +32,11 @@ public class QuotesDAO extends BaseDAO<QuickQuote> {
     @Override
     public Class<QuickQuote> getEntityClass() {
         return QuickQuote.class;
+    }
+
+    @Override
+    public NumericAttribute<QuickQuote, Long> getIDProperty() {
+        return QuickQuote.ID;
     }
 
     /**

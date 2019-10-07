@@ -1,7 +1,9 @@
 package nl.azwaan.quotedb.dao;
 
+import com.google.inject.Inject;
 import io.requery.EntityStore;
 import io.requery.Persistable;
+import io.requery.meta.NumericAttribute;
 import nl.azwaan.quotedb.models.Author;
 
 public class AuthorsDAO extends BaseDAO<Author> {
@@ -10,6 +12,7 @@ public class AuthorsDAO extends BaseDAO<Author> {
      *
      * @param store The store used to access and manipulate entities.
      */
+    @Inject
     public AuthorsDAO(EntityStore<Persistable, Author> store) {
         super(store);
     }
@@ -17,5 +20,10 @@ public class AuthorsDAO extends BaseDAO<Author> {
     @Override
     public Class<Author> getEntityClass() {
         return Author.class;
+    }
+
+    @Override
+    public NumericAttribute<Author, Long> getIDProperty() {
+        return Author.ID;
     }
 }

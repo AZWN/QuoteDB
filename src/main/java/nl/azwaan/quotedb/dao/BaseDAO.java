@@ -2,10 +2,12 @@ package nl.azwaan.quotedb.dao;
 
 import io.requery.EntityStore;
 import io.requery.Persistable;
+import io.requery.meta.NumericAttribute;
 import io.requery.query.Result;
 import io.requery.query.Scalar;
 import io.requery.query.Selection;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class BaseDAO<T extends Persistable> {
@@ -61,5 +63,23 @@ public abstract class BaseDAO<T extends Persistable> {
     public T insertEntity(T entity) {
         store.insert(entity);
         return store.refresh(entity);
+    }
+
+    /**
+     * @return The id {@link io.requery.proxy.Property} of the entity type T.
+     */
+    public abstract NumericAttribute<T, Long> getIDProperty();
+
+    /**
+     * Returns an entity with the given id.
+     * @param id The id of the entity to be queried
+     * @return An Optional containing either the found entity, or empty when the entity was not found.
+     */
+    public Optional<T> getEntityById(Long id) {
+        return selectQuery()
+                .where(getIDProperty().eq(id))
+                .get()
+                .stream()
+                .findAny();
     }
 }

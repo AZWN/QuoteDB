@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 
 import io.requery.EntityStore;
 import io.requery.query.Result;
+import io.requery.query.Scalar;
 import io.restassured.http.ContentType;
 import nl.azwaan.quotedb.models.Label;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class LabelAPITests extends AuthenticatedTest {
                 .get("/api/labels")
                 .then()
                 .assertThat()
-                .body(equalTo("[]"));
+                .body("data.size()", equalTo(0));
     }
 
     @Test
@@ -39,8 +40,8 @@ public class LabelAPITests extends AuthenticatedTest {
             .get("/api/labels")
             .then()
             .assertThat()
-            .body("[0].labelName", equalTo("Label1"))
-            .and().body("[1].labelName", equalTo("Label2"));
+            .body("data[0].labelName", equalTo("Label1"))
+            .and().body("data[1].labelName", equalTo("Label2"));
 
     }
 
@@ -91,12 +92,11 @@ public class LabelAPITests extends AuthenticatedTest {
                 .contentType(ContentType.JSON)
                 .statusCode(409);
 
-        long lblCount = ((Result<Label>) store.select(Label.class)
+        int lblCount = ((Scalar<Integer>) store.count(Label.class)
                 .get())
-                .stream()
-                .count();
+                .value();
 
-        assertThat(lblCount, equalTo(1L));
+        assertThat(lblCount, equalTo(1));
     }
 
     public class LabelParam {

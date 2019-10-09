@@ -2,7 +2,6 @@ package nl.azwaan.quotedb.models;
 
 import io.requery.Column;
 import io.requery.Entity;
-import io.requery.Index;
 import io.requery.ManyToOne;
 
 import java.util.Date;
@@ -10,8 +9,7 @@ import java.util.Date;
 @Entity
 public abstract class AbstractBook extends BaseModel {
 
-    @Index
-    @Column(nullable = false)
+    @Column(nullable = false, index = true)
     protected String title;
 
     @Column(nullable = false)

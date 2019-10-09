@@ -3,9 +3,11 @@ package nl.azwaan.quotedb.dao;
 import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
+import io.requery.meta.QueryAttribute;
 import io.requery.query.Result;
 import io.requery.query.Scalar;
 import io.requery.query.Selection;
+import io.requery.query.Update;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -32,7 +34,15 @@ public abstract class BaseDAO<T extends Persistable> {
 
 
     /**
-     * Returns a basic count query. This can be used to build more sophisticated select queries on.
+     * Returns a basic count query. This can be used to build more sophisticated count queries on.
+     * @return A basic count query.
+     */
+    public Update<? extends Scalar<Integer>> updateQuery() {
+        return store.update(getEntityClass());
+    }
+
+    /**
+     * Returns a basic select query. This can be used to build more sophisticated select queries on.
      * @return A basic select query.
      */
     public Selection<? extends Result<T>> selectQuery() {
@@ -51,6 +61,7 @@ public abstract class BaseDAO<T extends Persistable> {
      */
     public Stream<T> getAll() {
         return selectQuery()
+                .where(getDeletedProperty().eq(false))
                 .get()
                 .stream();
     }
@@ -71,6 +82,11 @@ public abstract class BaseDAO<T extends Persistable> {
     public abstract NumericAttribute<T, Long> getIDProperty();
 
     /**
+     * @return The delete {@link io.requery.proxy.Property} of the entity type T.
+     */
+    public abstract QueryAttribute<T, Boolean> getDeletedProperty();
+
+    /**
      * Returns an entity with the given id.
      * @param id The id of the entity to be queried
      * @return An Optional containing either the found entity, or empty when the entity was not found.
@@ -78,8 +94,24 @@ public abstract class BaseDAO<T extends Persistable> {
     public Optional<T> getEntityById(Long id) {
         return selectQuery()
                 .where(getIDProperty().eq(id))
+                .and(getDeletedProperty().eq(false))
                 .get()
                 .stream()
                 .findAny();
+    }
+
+    /**
+     * Deletes an entity with the given id.
+     * @param id The id of the entity to delete.
+     *
+     * @return true if any record got deleted, false otherwise.
+     */
+    public boolean deleteEntityById(Long id) {
+        return updateQuery()
+                .set(getDeletedProperty(), true)
+                .where(getIDProperty().eq(id))
+                .and(getDeletedProperty().eq(false))
+                .get()
+                .value() > 0;
     }
 }

@@ -50,6 +50,11 @@ public abstract class BaseModel {
     }
 
     /**
+     * True if deleted, false otherwise.
+     */
+    protected boolean deleted;
+
+    /**
      * @return Returns the id of the entity.
      */
     public abstract Long getId();

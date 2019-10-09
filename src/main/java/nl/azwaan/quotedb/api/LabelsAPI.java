@@ -35,7 +35,6 @@ public class LabelsAPI extends BaseAPI<Label> {
         this.labelsDAO = labelsDAO;
     }
 
-
     @Override
     protected void checkCanInsertEntity(@Body Label label) {
         if (labelsDAO.labelExists(label.getLabelName())) {

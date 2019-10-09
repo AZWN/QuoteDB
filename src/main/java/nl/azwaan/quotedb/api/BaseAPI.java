@@ -2,6 +2,7 @@ package nl.azwaan.quotedb.api;
 
 import io.requery.Persistable;
 import io.requery.query.Result;
+import io.requery.query.Return;
 import io.requery.query.Scalar;
 import io.requery.query.Selection;
 import net.moznion.uribuildertiny.URIBuilderTiny;
@@ -13,6 +14,7 @@ import org.jooby.Request;
 import org.jooby.Results;
 import org.jooby.Status;
 import org.jooby.mvc.Consumes;
+import org.jooby.mvc.DELETE;
 import org.jooby.mvc.GET;
 import org.jooby.mvc.POST;
 import org.jooby.mvc.Path;
@@ -36,7 +38,7 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
     }
 
     protected MultiResultPage<T> getPagedResult(Request request, BaseDAO<T> dao,
-            Function<Selection, Selection> queryFilterBuilder)
+            Function<Selection, Return> queryFilterBuilder)
     {
         final int pageSize = request.param("pageSize").intValue(Constants.MAX_PAGE_SIZE);
         final int pageNumber = request.param("page").intValue(1);
@@ -72,7 +74,7 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
     @GET
     @Path("")
     public MultiResultPage<T> getAll(Request request) {
-        return getPagedResult(request, dao, s -> s);
+        return getPagedResult(request, dao, s -> s.where(dao.getDeletedProperty().eq(false)));
     }
 
     /**
@@ -89,11 +91,9 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
         checkCanInsertEntity(entity);
 
         final T e = dao.insertEntity(entity);
-
         final String link = getEntityURL(req, e.getId());
 
         final SingleResultPage<T> resultPage = new SingleResultPage<>(e, link);
-
         return Results.with(resultPage, Status.CREATED);
     }
 
@@ -121,5 +121,18 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
                 .orElseThrow(() -> new EntityNotFoundException(dao.getEntityClass().getName(), id));
 
         return new SingleResultPage<T>(entity, getEntityURL(req));
+    }
+
+
+    /**
+     * Deletes a single entity.
+     * @param id The id of the entity as part of the URL.
+     *
+     * @return The appropriate status code (200/404)
+     */
+    @DELETE
+    @Path("/:id")
+    public org.jooby.Result deleteEntity(Long id) {
+        return (dao.deleteEntityById(id)) ? Results.ok() : Results.with(Status.NOT_FOUND);
     }
 }

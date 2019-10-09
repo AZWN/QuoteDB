@@ -76,12 +76,11 @@ public class UsersDAO {
      * @return true is the username is in use, false otherwise.
      */
     public boolean userNameExists(String userName) {
-        return store.select(User.class)
+        return store.count(User.class)
                 .where(User.USER_NAME.eq(userName))
+                .limit(1)
                 .get()
-                .stream()
-                .findAny()
-                .isPresent();
+                .value() > 0;
     }
 
     /**

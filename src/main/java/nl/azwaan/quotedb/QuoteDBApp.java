@@ -1,6 +1,12 @@
 package nl.azwaan.quotedb;
 
 import io.requery.sql.TableCreationMode;
+import io.requery.sql.TransactionMode;
+
+import nl.azwaan.quotedb.models.Models;
+import nl.azwaan.quotedb.users.DevUserIDProvider;
+import nl.azwaan.quotedb.users.TokenUserIDProvider;
+import nl.azwaan.quotedb.users.UserIDProvider;
 
 import org.jooby.Jooby;
 import org.jooby.Results;
@@ -8,8 +14,6 @@ import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 import org.jooby.pebble.Pebble;
 import org.jooby.requery.Requery;
-
-import nl.azwaan.quotedb.models.Models;
 
 /**
  * Quote database Application.
@@ -25,7 +29,8 @@ public class QuoteDBApp extends Jooby {
         use(new Jdbc());
 
         use(new Requery(Models.DEFAULT)
-                .schema(TableCreationMode.CREATE_NOT_EXISTS));
+                .schema(TableCreationMode.CREATE_NOT_EXISTS)
+                .doWith(s -> s.setTransactionMode(TransactionMode.NONE)));
 
         // React frontend setup
         // use(new Assets());
@@ -33,8 +38,13 @@ public class QuoteDBApp extends Jooby {
         use(new Pebble());
         get("/", () -> Results.html("index"));
 
-        use(new AuthModule());
-        use(new AuthVerificationModule("/api/**"));
+        on("dev", () -> {
+            bind(UserIDProvider.class, DevUserIDProvider.class);
+        }).orElse(() -> {
+            use(new AuthModule());
+            use(new AuthVerificationModule("/api/**"));
+            bind(UserIDProvider.class, TokenUserIDProvider.class);
+        });
         use(new RestAPIModule());
     }
 

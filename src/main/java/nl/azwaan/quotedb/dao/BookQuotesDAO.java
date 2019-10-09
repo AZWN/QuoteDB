@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
+import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.BookQuote;
 
 /**
@@ -32,5 +33,10 @@ public class BookQuotesDAO extends BaseDAO<BookQuote> {
     @Override
     public NumericAttribute<BookQuote, Long> getIDProperty() {
         return BookQuote.ID;
+    }
+
+    @Override
+    public QueryAttribute<BookQuote, Boolean> getDeletedProperty() {
+        return BookQuote.DELETED;
     }
 }

@@ -5,11 +5,8 @@ import com.google.inject.Singleton;
 import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
+import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.QuickQuote;
-
-import java.util.stream.Stream;
-
-import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
 
 /**
  * Object to access quotes from the database.
@@ -39,24 +36,9 @@ public class QuotesDAO extends BaseDAO<QuickQuote> {
         return QuickQuote.ID;
     }
 
-    /**
-     * Returns all quotes.
-     *
-     * @param page The page number
-     * @param pageSize The page size
-     * @return The quotes in the selected category and page.
-     */
-    public Stream<QuickQuote> getAllQuotes(int page, int pageSize) {
-        if (pageSize < 1 || pageSize > MAX_PAGE_SIZE) {
-            throw new IllegalArgumentException("pageSize must be between 1 and 100 (inclusive)");
-        }
-
-        return store.select(QuickQuote.class)
-                .orderBy(QuickQuote.GENERATION_DATE.asc(), QuickQuote.ID.asc())
-                .limit(page * pageSize)
-                .get()
-                .stream()
-                .skip((page - 1) * pageSize);
+    @Override
+    public QueryAttribute<QuickQuote, Boolean> getDeletedProperty() {
+        return QuickQuote.DELETED;
     }
 
 }

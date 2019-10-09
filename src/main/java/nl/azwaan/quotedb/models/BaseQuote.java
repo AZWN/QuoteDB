@@ -13,13 +13,13 @@ public abstract class BaseQuote extends BaseModel {
     /**
      * Quote name/title.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, index = true)
     protected String title;
 
     /**
      * Quote text.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, index = true)
     protected String text;
 
     /**

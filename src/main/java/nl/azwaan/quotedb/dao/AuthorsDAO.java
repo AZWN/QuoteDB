@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
+import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.Author;
 
 public class AuthorsDAO extends BaseDAO<Author> {
@@ -25,5 +26,10 @@ public class AuthorsDAO extends BaseDAO<Author> {
     @Override
     public NumericAttribute<Author, Long> getIDProperty() {
         return Author.ID;
+    }
+
+    @Override
+    public QueryAttribute<Author, Boolean> getDeletedProperty() {
+        return Author.DELETED;
     }
 }

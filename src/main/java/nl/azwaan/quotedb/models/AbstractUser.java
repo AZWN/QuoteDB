@@ -3,7 +3,6 @@ package nl.azwaan.quotedb.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.requery.Column;
 import io.requery.Entity;
-import io.requery.Index;
 
 @Entity
 public abstract class AbstractUser extends BaseModel {
@@ -11,8 +10,7 @@ public abstract class AbstractUser extends BaseModel {
     /**
      * Username.
      */
-    @Index
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, index = true)
     protected String userName;
 
     /**

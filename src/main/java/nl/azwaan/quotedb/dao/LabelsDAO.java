@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
+import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.Label;
 
 /**
@@ -34,6 +35,11 @@ public class LabelsDAO extends BaseDAO<Label> {
         return Label.ID;
     }
 
+    @Override
+    public QueryAttribute<Label, Boolean> getDeletedProperty() {
+        return Label.DELETED;
+    }
+
     /**
      * Checks if a label already exists.
      *
@@ -43,6 +49,7 @@ public class LabelsDAO extends BaseDAO<Label> {
     public boolean labelExists(String labelName) {
         return store.select(Label.class)
                 .where(Label.LABEL_NAME.eq(labelName))
+                .and(Label.DELETED.eq(false))
                 .limit(1)
                 .get()
                 .stream()

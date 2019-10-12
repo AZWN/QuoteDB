@@ -35,8 +35,8 @@ public abstract class BaseDAO<T extends Persistable> {
 
 
     /**
-     * Returns a basic count query. This can be used to build more sophisticated count queries on.
-     * @return A basic count query.
+     * Returns a basic update query. This can be used to build more sophisticated update queries on.
+     * @return A basic update query.
      */
     public Update<? extends Scalar<Integer>> updateQuery() {
         return store.update(getEntityClass());
@@ -98,12 +98,14 @@ public abstract class BaseDAO<T extends Persistable> {
      * @return An Optional containing either the found entity, or empty when the entity was not found.
      */
     public Optional<T> getEntityById(Long id) {
-        return selectQuery()
+        try (Stream<T> s = selectQuery()
                 .where(getIDProperty().eq(id))
                 .and(getDeletedProperty().eq(false))
                 .get()
-                .stream()
-                .findAny();
+                .stream())
+        {
+            return s.findAny();
+        }
     }
 
     /**
@@ -119,5 +121,14 @@ public abstract class BaseDAO<T extends Persistable> {
                 .and(getDeletedProperty().eq(false))
                 .get()
                 .value() > 0;
+    }
+
+    /**
+     * Updates a modified entity.
+     * @param entity The entity to be updated.
+     * @return The updated entity.
+     */
+    public T updateEntity(T entity) {
+        return store.update(entity);
     }
 }

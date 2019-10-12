@@ -1,5 +1,6 @@
 package nl.azwaan.quotedb;
 
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.requery.sql.TableCreationMode;
 import io.requery.sql.TransactionMode;
 
@@ -16,6 +17,8 @@ import org.jooby.json.Jackson;
 import org.jooby.pebble.Pebble;
 import org.jooby.requery.Requery;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Quote database Application.
  *
@@ -25,7 +28,12 @@ public class QuoteDBApp extends Jooby {
 
     {
         // REST API backend setup
-        use(new Jackson());
+        use(new Jackson()
+                .module(new Jdk8Module())
+                .doWith(mapper -> {
+                    final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    mapper.setDateFormat(df);
+                }));
 
         use(new Jdbc());
         use(new Requery(Models.DEFAULT)

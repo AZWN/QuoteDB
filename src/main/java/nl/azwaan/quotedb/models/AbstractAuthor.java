@@ -1,5 +1,6 @@
 package nl.azwaan.quotedb.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.requery.Column;
 import io.requery.Entity;
 import io.requery.Lazy;
@@ -26,10 +27,12 @@ public abstract class AbstractAuthor extends UserSpecificModel {
     @Column(nullable = false)
     protected Date dateOfBirth;
 
+    @Column(definition = "MEDIUMTEXT")
     protected String biography;
 
     @OneToMany
     @Lazy
+    @JsonBackReference
     protected Set<Book> books;
 
     /**

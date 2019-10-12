@@ -67,6 +67,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jooby</groupId>
+            <artifactId>jooby-flyway</artifactId>
+            <version>${jooby.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.requery</groupId>
             <artifactId>requery</artifactId>
             <version>${jooby.version}</version>

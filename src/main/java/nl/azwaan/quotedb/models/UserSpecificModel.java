@@ -20,7 +20,7 @@ public abstract class UserSpecificModel extends BaseModel {
     public abstract void setUser(User user);
 
     /**
-     * Gets the user for this entity;
+     * Gets the user for this entity.
      * @return The user for this entity.
      */
     public abstract User getUser();

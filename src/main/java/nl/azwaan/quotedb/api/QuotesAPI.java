@@ -19,8 +19,6 @@ import org.jooby.mvc.Produces;
 @Consumes("application/json")
 public class QuotesAPI extends BaseAPI<QuickQuote> {
 
-    private QuotesDAO quotesDAO;
-
     /**
      * Creates a new {@link QuotesAPI} controller.
      * @param quotesDAO The db accessor for quotes.
@@ -28,6 +26,5 @@ public class QuotesAPI extends BaseAPI<QuickQuote> {
     @Inject
     public QuotesAPI(QuotesDAO quotesDAO) {
         super(quotesDAO);
-        this.quotesDAO = quotesDAO;
     }
 }

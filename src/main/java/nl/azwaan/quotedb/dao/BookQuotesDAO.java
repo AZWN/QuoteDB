@@ -7,6 +7,7 @@ import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
 import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.BookQuote;
+import nl.azwaan.quotedb.models.User;
 
 /**
  * Classed used for data operations on {@link BookQuote}s.
@@ -38,5 +39,10 @@ public class BookQuotesDAO extends BaseDAO<BookQuote> {
     @Override
     public QueryAttribute<BookQuote, Boolean> getDeletedProperty() {
         return BookQuote.DELETED;
+    }
+
+    @Override
+    public QueryAttribute<BookQuote, User> getUserAttribute() {
+        return BookQuote.USER;
     }
 }

@@ -7,6 +7,7 @@ import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
 import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.QuickQuote;
+import nl.azwaan.quotedb.models.User;
 
 /**
  * Object to access quotes from the database.
@@ -39,6 +40,11 @@ public class QuotesDAO extends BaseDAO<QuickQuote> {
     @Override
     public QueryAttribute<QuickQuote, Boolean> getDeletedProperty() {
         return QuickQuote.DELETED;
+    }
+
+    @Override
+    public QueryAttribute<QuickQuote, User> getUserAttribute() {
+        return QuickQuote.USER;
     }
 
 }

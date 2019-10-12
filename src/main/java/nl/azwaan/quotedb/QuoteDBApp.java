@@ -45,6 +45,9 @@ public class QuoteDBApp extends Jooby {
             use(new AuthVerificationModule("/api/**"));
             bind(UserIDProvider.class, TokenUserIDProvider.class);
         });
+
+        use(new PermissionsModule());
+
         use(new RestAPIModule());
     }
 

@@ -9,7 +9,7 @@ import io.requery.Column;
  * @author Aron Zwaan
  */
 @Entity
-public abstract class AbstractLabel extends BaseModel {
+public abstract class AbstractLabel extends UserSpecificModel {
 
     /**
      * Label name. Is unique, which means a label can never be inserted twice.

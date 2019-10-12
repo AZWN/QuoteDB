@@ -37,10 +37,10 @@ import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
 @Consumes("application/json")
 public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
 
-    private BaseDAO<T> dao;
-    @Inject private UsersDAO usersDAO;
-    @Inject private UserIDProvider userIDProvider;
-    @Inject private PermissionChecker<T> permissionChecker;
+    protected BaseDAO<T> dao;
+    @Inject protected UsersDAO usersDAO;
+    @Inject protected UserIDProvider userIDProvider;
+    @Inject protected PermissionChecker<T> permissionChecker;
 
     protected BaseAPI(BaseDAO<T> dao) {
         this.dao = dao;
@@ -106,7 +106,7 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
         final User authenticatedUser = getAuthenticatedUser(req);
 
         final T entity = req.body(dao.getEntityClass());
-        entity.setUser(authenticatedUser);
+        resolveReferencesForNewEntity(entity, authenticatedUser);
         permissionChecker.checkCreateEntity(entity, authenticatedUser);
         checkCanInsertEntity(entity);
 
@@ -117,12 +117,21 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
         return Results.with(resultPage, Status.CREATED);
     }
 
-    private User getAuthenticatedUser(Request req) {
+    /**
+     * Instead of adding new entities for subfields, resolve existing entities.
+     * @param entity The entity to resolve referencef from.
+     * @param authenticatedUser The user performing these operations.
+     */
+    protected void resolveReferencesForNewEntity(T entity, User authenticatedUser) {
+        entity.setUser(authenticatedUser);
+    }
+
+    protected User getAuthenticatedUser(Request req) {
         final Long authenticatedUserId = userIDProvider.getUserId(req);
         return usersDAO.getUserById(authenticatedUserId);
     }
 
-    private String getEntityURL(Request req, Object... e) {
+    protected String getEntityURL(Request req, Object... e) {
         return new URIBuilderTiny(req.path())
                     .setQueryParameters(new HashMap<>())
                     .appendPaths(e)

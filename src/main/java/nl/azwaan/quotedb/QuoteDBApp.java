@@ -10,6 +10,7 @@ import nl.azwaan.quotedb.users.UserIDProvider;
 
 import org.jooby.Jooby;
 import org.jooby.Results;
+import org.jooby.flyway.Flywaydb;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 import org.jooby.pebble.Pebble;
@@ -27,10 +28,11 @@ public class QuoteDBApp extends Jooby {
         use(new Jackson());
 
         use(new Jdbc());
-
         use(new Requery(Models.DEFAULT)
                 .schema(TableCreationMode.CREATE_NOT_EXISTS)
                 .doWith(s -> s.setTransactionMode(TransactionMode.NONE)));
+        // Use flyway to add indices.
+        use(new Flywaydb());
 
         // React frontend setup
         // use(new Assets());

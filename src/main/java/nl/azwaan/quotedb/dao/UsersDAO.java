@@ -8,6 +8,8 @@ import nl.azwaan.quotedb.exceptions.ResourceConflictException;
 import nl.azwaan.quotedb.models.User;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.NoSuchElementException;
+
 /**
  * Object allowing operations over {@link User}s.
  *
@@ -91,6 +93,19 @@ public class UsersDAO {
     public User getUserByUserName(String userName) {
         return store.select(User.class)
                 .where(User.USER_NAME.eq(userName))
+                .get()
+                .first();
+    }
+
+    /**
+     * Fetches a user by id.
+     * @param userId The id of the user to fetch.
+     * @return The user with the given id.
+     * @throws NoSuchElementException When the user with this id is not found.
+     */
+    public User getUserById(Long userId) {
+        return store.select(User.class)
+                .where(User.ID.eq(userId))
                 .get()
                 .first();
     }

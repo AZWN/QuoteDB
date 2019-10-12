@@ -8,7 +8,7 @@ import io.requery.Superclass;
 import java.util.Set;
 
 @Superclass
-public abstract class BaseQuote extends BaseModel {
+public abstract class BaseQuote extends UserSpecificModel {
 
     /**
      * Quote name/title.

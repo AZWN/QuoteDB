@@ -7,6 +7,7 @@ import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
 import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.Label;
+import nl.azwaan.quotedb.models.User;
 
 /**
  * Class defining methods to access labels.
@@ -38,6 +39,11 @@ public class LabelsDAO extends BaseDAO<Label> {
     @Override
     public QueryAttribute<Label, Boolean> getDeletedProperty() {
         return Label.DELETED;
+    }
+
+    @Override
+    public QueryAttribute<Label, User> getUserAttribute() {
+        return Label.USER;
     }
 
     /**

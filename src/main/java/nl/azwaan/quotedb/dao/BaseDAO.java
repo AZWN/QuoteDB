@@ -8,6 +8,7 @@ import io.requery.query.Result;
 import io.requery.query.Scalar;
 import io.requery.query.Selection;
 import io.requery.query.Update;
+import nl.azwaan.quotedb.models.User;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -77,14 +78,19 @@ public abstract class BaseDAO<T extends Persistable> {
     }
 
     /**
-     * @return The id {@link io.requery.proxy.Property} of the entity type T.
+     * @return The id {@link io.requery.meta.Attribute} of the entity type T.
      */
     public abstract NumericAttribute<T, Long> getIDProperty();
 
     /**
-     * @return The delete {@link io.requery.proxy.Property} of the entity type T.
+     * @return The delete {@link io.requery.meta.Attribute} of the entity type T.
      */
     public abstract QueryAttribute<T, Boolean> getDeletedProperty();
+
+    /**
+     * @return The user {@link io.requery.meta.Attribute} of the entity type T.
+     */
+    public abstract QueryAttribute<T, User> getUserAttribute();
 
     /**
      * Returns an entity with the given id.

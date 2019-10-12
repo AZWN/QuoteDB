@@ -1,5 +1,6 @@
 package nl.azwaan.quotedb.api;
 
+import com.google.inject.Inject;
 import io.requery.Persistable;
 import io.requery.query.Result;
 import io.requery.query.Return;
@@ -8,8 +9,12 @@ import io.requery.query.Selection;
 import net.moznion.uribuildertiny.URIBuilderTiny;
 import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.dao.BaseDAO;
+import nl.azwaan.quotedb.dao.UsersDAO;
 import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
-import nl.azwaan.quotedb.models.BaseModel;
+import nl.azwaan.quotedb.models.User;
+import nl.azwaan.quotedb.models.UserSpecificModel;
+import nl.azwaan.quotedb.permissions.PermissionChecker;
+import nl.azwaan.quotedb.users.UserIDProvider;
 import org.jooby.Request;
 import org.jooby.Results;
 import org.jooby.Status;
@@ -23,15 +28,19 @@ import org.jooby.mvc.Produces;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
 
 @Produces("application/json")
 @Consumes("application/json")
-public abstract class BaseAPI<T extends BaseModel & Persistable> {
+public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
 
     private BaseDAO<T> dao;
+    @Inject private UsersDAO usersDAO;
+    @Inject private UserIDProvider userIDProvider;
+    @Inject private PermissionChecker<T> permissionChecker;
 
     protected BaseAPI(BaseDAO<T> dao) {
         this.dao = dao;
@@ -57,7 +66,11 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
 
         ((Result<T>) queryFilterBuilder.apply(dao.selectQuery()).get())
                 .iterator((pageNumber - 1) * pageSize, pageSize)
-                .forEachRemaining(data::add);
+                .forEachRemaining(elem -> {
+                    // Check if entity is allowed to be read.
+                    permissionChecker.checkReadEntity(elem, getAuthenticatedUser(request));
+                    data.add(elem);
+                });
 
         final MultiResultPage<T> resultPage =
                 MultiResultPage.resultPageFor(data, totalResults, pageSize, pageNumber, request.path());
@@ -74,7 +87,10 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
     @GET
     @Path("")
     public MultiResultPage<T> getAll(Request request) {
-        return getPagedResult(request, dao, s -> s.where(dao.getDeletedProperty().eq(false)));
+        final User user = getAuthenticatedUser(request);
+
+        return getPagedResult(request, dao, s -> (Return) s.where(dao.getDeletedProperty().eq(false))
+                        .and(dao.getUserAttribute().eq(user)));
     }
 
     /**
@@ -87,7 +103,11 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
     @POST
     @Path("")
     public org.jooby.Result addEntity(Request req) throws Exception {
+        final User authenticatedUser = getAuthenticatedUser(req);
+
         final T entity = req.body(dao.getEntityClass());
+        entity.setUser(authenticatedUser);
+        permissionChecker.checkCreateEntity(entity, authenticatedUser);
         checkCanInsertEntity(entity);
 
         final T e = dao.insertEntity(entity);
@@ -95,6 +115,11 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
 
         final SingleResultPage<T> resultPage = new SingleResultPage<>(e, link);
         return Results.with(resultPage, Status.CREATED);
+    }
+
+    private User getAuthenticatedUser(Request req) {
+        final Long authenticatedUserId = userIDProvider.getUserId(req);
+        return usersDAO.getUserById(authenticatedUserId);
     }
 
     private String getEntityURL(Request req, Object... e) {
@@ -120,19 +145,28 @@ public abstract class BaseAPI<T extends BaseModel & Persistable> {
         final T entity = dao.getEntityById(id)
                 .orElseThrow(() -> new EntityNotFoundException(dao.getEntityClass().getName(), id));
 
+        final User user = getAuthenticatedUser(req);
+        permissionChecker.checkReadEntity(entity, user);
+
         return new SingleResultPage<T>(entity, getEntityURL(req));
     }
 
-
     /**
      * Deletes a single entity.
+     * @param req The request that is served.
      * @param id The id of the entity as part of the URL.
      *
      * @return The appropriate status code (200/404)
      */
     @DELETE
     @Path("/:id")
-    public org.jooby.Result deleteEntity(Long id) {
+    public org.jooby.Result deleteEntity(Request req, Long id) {
+        final Optional<T> entity = dao.getEntityById(id);
+        entity.map(x -> {
+            permissionChecker.checkDeleteEntity(x, getAuthenticatedUser(req));
+            return x;
+        });
+
         return (dao.deleteEntityById(id)) ? Results.ok() : Results.with(Status.NOT_FOUND);
     }
 }

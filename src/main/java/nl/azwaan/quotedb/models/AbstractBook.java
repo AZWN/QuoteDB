@@ -7,7 +7,7 @@ import io.requery.ManyToOne;
 import java.util.Date;
 
 @Entity
-public abstract class AbstractBook extends BaseModel {
+public abstract class AbstractBook extends UserSpecificModel {
 
     @Column(nullable = false, index = true)
     protected String title;

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.exceptions.IncompleteTokenException;
 import org.jooby.Mutant;
@@ -11,6 +12,7 @@ import org.jooby.Request;
 
 import java.util.Map;
 
+@Singleton
 public class TokenUserIDProvider implements UserIDProvider {
 
 

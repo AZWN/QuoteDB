@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-public abstract class AbstractAuthor extends BaseModel {
+public abstract class AbstractAuthor extends UserSpecificModel {
 
     @Column(nullable = false)
     protected String firstName;

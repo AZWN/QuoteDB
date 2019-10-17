@@ -7,12 +7,14 @@ DROP PROCEDURE IF EXISTS remove_publication_date_column;;
 create procedure add_publication_year_column ()
 begin
     declare continue handler for 1060 begin end;
+    declare continue handler for 1146 begin end;
     alter table book add publicationYear bigint(20);
 end;;
 
 create procedure remove_publication_date_column ()
 begin
     declare continue handler for 1146 begin end;
+    declare continue handler for 1091 begin end;
     alter table book drop column publicationDate;
 end;;
 

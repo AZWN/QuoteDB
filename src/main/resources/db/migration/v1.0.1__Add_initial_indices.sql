@@ -1,11 +1,14 @@
 delimiter ;;
 
-drop procedure if exists add_indices();;
+drop procedure if exists add_indices;;
 
 create procedure add_indices ()
 begin
     -- When table not exists there is no problem, requery will create it correct
     declare continue handler for 42102 begin end;
+    declare continue handler for 1146 begin end;
+    -- Dont error when index does already exist
+    declare continue handler for 1061 begin end;
     CREATE INDEX author_firstName ON author(firstName);
     CREATE INDEX author_lastName ON author(lastName);
 
@@ -17,4 +20,4 @@ begin
 end;;
 
 call add_indices ();;
-drop procedure if exists add_indices();;
+drop procedure if exists add_indices;;

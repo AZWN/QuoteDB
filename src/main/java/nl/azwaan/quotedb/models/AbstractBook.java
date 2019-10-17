@@ -1,6 +1,5 @@
 package nl.azwaan.quotedb.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.requery.Column;
 import io.requery.Entity;
 import io.requery.ManyToOne;
@@ -17,6 +16,5 @@ public abstract class AbstractBook extends UserSpecificModel {
     protected int publicationYear;
 
     @ManyToOne
-    @JsonManagedReference
     protected Author author;
 }

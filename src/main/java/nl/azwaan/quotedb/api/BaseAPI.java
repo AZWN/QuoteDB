@@ -110,7 +110,7 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
         permissionChecker.checkCreateEntity(entity, authenticatedUser);
         checkCanInsertEntity(entity);
 
-        final T e = dao.insertEntity(entity);
+        final T e = dao.upsertEntity(entity);
         final String link = getEntityURL(req, e.getId());
 
         final SingleResultPage<T> resultPage = new SingleResultPage<>(e, link);
@@ -119,7 +119,7 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
 
     /**
      * Instead of adding new entities for subfields, resolve existing entities.
-     * @param entity The entity to resolve referencef from.
+     * @param entity The entity to resolve reference from.
      * @param authenticatedUser The user performing these operations.
      */
     protected void resolveReferencesForNewEntity(T entity, User authenticatedUser) {

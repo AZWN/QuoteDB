@@ -31,15 +31,6 @@ public class BooksAPI extends BaseAPI<Book> {
         super(dao);
     }
 
-    @Override
-    protected void resolveReferencesForNewEntity(Book book, User authenticatedUser) {
-        super.resolveReferencesForNewEntity(book, authenticatedUser);
-
-        final Author author = authorsDAO.getEntityById(book.getAuthor().getId())
-                .orElseThrow(() -> new EntityNotFoundException(Author.class.getName(), book.getAuthor().getId()));
-        book.setAuthor(author);
-    }
-
     /**
      * Updates a book resource.
      * @param request The request to be served

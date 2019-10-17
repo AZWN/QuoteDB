@@ -78,6 +78,16 @@ public abstract class BaseDAO<T extends Persistable> {
     }
 
     /**
+     * Upserts an entity into the database.
+     * @param entity The entity to be upserted.
+     * @return The upserted entity.
+     */
+    public T upsertEntity(T entity) {
+        store.upsert(entity);
+        return store.refresh(entity);
+    }
+
+    /**
      * @return The id {@link io.requery.meta.Attribute} of the entity type T.
      */
     public abstract NumericAttribute<T, Long> getIDProperty();

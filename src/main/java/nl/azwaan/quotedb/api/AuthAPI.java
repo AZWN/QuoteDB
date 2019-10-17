@@ -92,7 +92,7 @@ public class AuthAPI {
             date.setTime(date.getTime() + TWO_DAYS);
 
             final String signedToken = JWT.create()
-                    .withClaim(Constants.JWT_USER_ID_KEY, user.getId().toString())
+                    .withClaim(Constants.JWT_USER_ID_KEY, user.getId())
                     .withExpiresAt(date)
                     .sign(Algorithm.HMAC512(jwtHashKey));
 

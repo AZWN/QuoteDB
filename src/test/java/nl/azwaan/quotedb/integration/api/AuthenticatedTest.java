@@ -3,7 +3,6 @@ package nl.azwaan.quotedb.integration.api;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
-import nl.azwaan.quotedb.models.User;
 import org.junit.Before;
 
 import static io.restassured.RestAssured.given;
@@ -66,6 +65,13 @@ public class AuthenticatedTest extends APITest {
 
     protected RequestSpecification getBase() {
         return given()
+                .header("Authorization", getToken());
+    }
+
+    protected RequestSpecification patchBase() {
+        return given()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
                 .header("Authorization", getToken());
     }
 }

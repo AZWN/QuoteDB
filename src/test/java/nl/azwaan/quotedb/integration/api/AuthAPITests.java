@@ -88,8 +88,7 @@ public class AuthAPITests extends APITest {
                 .path("token");
 
         DecodedJWT dt = JWT.decode(token);
-        assertThat(dt.getClaim("user_id").asString(), equalTo(user.getId().toString()));
-
+        assertThat(dt.getClaim("user_id").asLong(), equalTo(user.getId()));
     }
 
     @Test

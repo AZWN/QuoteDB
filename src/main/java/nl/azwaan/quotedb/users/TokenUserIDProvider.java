@@ -24,7 +24,6 @@ public class TokenUserIDProvider implements UserIDProvider {
 
     @Override
     public Long getUserId(Request req) {
-
         final Mutant authHeader = req.header("Authorization");
         if (!authHeader.isSet()) {
             throw new RuntimeException("User id requested from unauthorized request");
@@ -36,6 +35,7 @@ public class TokenUserIDProvider implements UserIDProvider {
         if (!claims.containsKey(Constants.JWT_USER_ID_KEY)) {
             throw new IncompleteTokenException("Invalid JWT token: no user_id claim");
         }
-        return null;
+
+        return claims.get(Constants.JWT_USER_ID_KEY).asLong();
     }
 }

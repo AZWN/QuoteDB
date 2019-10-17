@@ -1,11 +1,10 @@
 package nl.azwaan.quotedb.integration.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.restassured.http.ContentType;
 import nl.azwaan.quotedb.models.QuickQuote;
+import nl.azwaan.quotedb.models.User;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -116,12 +115,14 @@ public class QuoteAPITests extends AuthenticatedTest {
 
 
     private void insertQuotes(int quoteCount) {
+        User user = getUser();
         EntityStore store = app.require(EntityStore.class);
 
         for (int i = 1; i <= quoteCount; i++) {
             QuickQuote quote = new QuickQuote();
             quote.setText(String.format("TestQuote%d", i));
             quote.setTitle(String.format("Title%d", i));
+            quote.setUser(user);
 
             store.insert(quote);
         }

@@ -8,6 +8,7 @@ import io.requery.query.Result;
 import io.requery.query.Scalar;
 import io.restassured.http.ContentType;
 import nl.azwaan.quotedb.models.Label;
+import nl.azwaan.quotedb.models.User;
 import org.junit.Test;
 
 public class LabelAPITests extends AuthenticatedTest {
@@ -25,16 +26,18 @@ public class LabelAPITests extends AuthenticatedTest {
     @Test
     public void testGetLabelsMultiple() throws Throwable {
         EntityStore store = app.require(EntityStore.class);
+        User user = getUser();
 
         Label label1 = new Label();
         label1.setLabelName("Label1");
+        label1.setUser(user);
 
         Label label2 = new Label();
         label2.setLabelName("Label2");
+        label2.setUser(user);
 
         store.insert(label1);
         store.insert(label2);
-
 
         getBase()
             .get("/api/labels")

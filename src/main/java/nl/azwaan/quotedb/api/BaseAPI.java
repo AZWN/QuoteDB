@@ -123,7 +123,7 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
      * @param authenticatedUser The user performing these operations.
      */
     protected void resolveReferencesForNewEntity(T entity, User authenticatedUser) {
-        entity.setUser(authenticatedUser);
+        entity.setUserOnSubfields(authenticatedUser);
     }
 
     protected User getAuthenticatedUser(Request req) {

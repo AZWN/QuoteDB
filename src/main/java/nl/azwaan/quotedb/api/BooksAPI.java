@@ -1,8 +1,8 @@
 package nl.azwaan.quotedb.api;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import nl.azwaan.quotedb.api.patches.BookPatch;
 import nl.azwaan.quotedb.dao.AuthorsDAO;
 import nl.azwaan.quotedb.dao.BooksDAO;
 import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
@@ -15,8 +15,6 @@ import org.jooby.mvc.Consumes;
 import org.jooby.mvc.PATCH;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
-
-import java.util.Optional;
 
 @Singleton
 @Path("/books")
@@ -62,11 +60,13 @@ public class BooksAPI extends BaseAPI<Book> {
         return new SingleResultPage<>(book, getEntityURL(request));
     }
 
-    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NON_PRIVATE)
-    private static class BookPatch {
-        Optional<String> title = Optional.empty();
-        Optional<String> publisher = Optional.empty();
-        Optional<Integer> publicationYear = Optional.empty();
-        Optional<Long> author = Optional.empty();
+    @Override
+    protected void resolveReferencesForNewEntity(Book entity, User authenticatedUser) {
+        super.resolveReferencesForNewEntity(entity, authenticatedUser);
+
+        // If author already in db, replace with real entity
+        authorsDAO.getEntityById(entity.getAuthor().getId())
+                .ifPresent(entity::setAuthor);
     }
+
 }

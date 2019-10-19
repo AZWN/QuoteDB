@@ -2,6 +2,7 @@ package nl.azwaan.quotedb.models;
 
 import io.requery.Column;
 import io.requery.JunctionTable;
+import io.requery.Lazy;
 import io.requery.ManyToMany;
 import io.requery.Superclass;
 
@@ -32,6 +33,7 @@ public abstract class BaseQuote extends UserSpecificModel {
      */
     @ManyToMany
     @JunctionTable
+    @Lazy
     protected Set<Label> labels;
 
 }

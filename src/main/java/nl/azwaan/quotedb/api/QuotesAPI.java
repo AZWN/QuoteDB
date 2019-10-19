@@ -27,4 +27,9 @@ public class QuotesAPI extends BaseQuoteAPI<QuickQuote, QuotePatch> {
     public QuotesAPI(QuotesDAO quotesDAO) {
         super(quotesDAO);
     }
+
+    @Override
+    protected Class<QuotePatch> getPatchClass() {
+        return QuotePatch.class;
+    }
 }

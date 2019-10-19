@@ -39,4 +39,9 @@ public class BookQuotesAPI extends BaseQuoteAPI<BookQuote, BookQuotePatch> {
             quote.setBook(newBook);
         });
     }
+
+    @Override
+    protected Class<BookQuotePatch> getPatchClass() {
+        return BookQuotePatch.class;
+    }
 }

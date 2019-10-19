@@ -21,6 +21,7 @@ import org.jooby.Status;
 import org.jooby.mvc.Consumes;
 import org.jooby.mvc.DELETE;
 import org.jooby.mvc.GET;
+import org.jooby.mvc.PATCH;
 import org.jooby.mvc.POST;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
@@ -35,7 +36,7 @@ import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
 
 @Produces("application/json")
 @Consumes("application/json")
-public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
+public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch> {
 
     protected BaseDAO<T> dao;
     @Inject protected UsersDAO usersDAO;
@@ -178,4 +179,31 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable> {
 
         return (dao.deleteEntityById(id)) ? Results.ok() : Results.with(Status.NOT_FOUND);
     }
+
+    /**
+     * Updates an existing quote.
+     * @param request The request that is handled
+     * @param id The id of the quote to be patched
+     * @throws Exception When the body cannot be parsed to the requested path type
+     *
+     * @return A page containing the updated resource.
+     */
+    @PATCH
+    @Path("/:id")
+    public SingleResultPage<T> updateEntity(Request request, Long id) throws Exception {
+        final TPatch patch = request.body(getPatchClass());
+        final User authenticatedUser = getAuthenticatedUser(request);
+        final T entity = dao.getEntityById(id)
+                .orElseThrow(() -> new EntityNotFoundException(dao.getEntityClass().getName(), id));
+
+        permissionChecker.checkUpdateEntity(entity, authenticatedUser);
+        applyPatch(entity, authenticatedUser, patch);
+        dao.updateEntity(entity);
+
+        return new SingleResultPage<>(entity, getEntityURL(request));
+    }
+
+    protected abstract void applyPatch(T entity, User authenticatedUser, TPatch patch);
+
+    protected abstract Class<TPatch> getPatchClass();
 }

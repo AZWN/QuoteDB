@@ -12,8 +12,14 @@ import io.requery.Column;
 public abstract class AbstractLabel extends UserSpecificModel {
 
     /**
-     * Label name. Is unique, which means a label can never be inserted twice.
+     * Label name.
      */
-    @Column(unique = true, nullable = false, index = true)
+    @Column(nullable = false, index = true)
     protected String labelName;
+
+    /**
+     * Label color
+     */
+    @Column(value = "'white'", nullable = false)
+    protected String color;
 }

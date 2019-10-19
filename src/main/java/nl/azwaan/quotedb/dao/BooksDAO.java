@@ -9,8 +9,6 @@ import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.Book;
 import nl.azwaan.quotedb.models.User;
 
-import java.util.Optional;
-
 @Singleton
 public class BooksDAO extends BaseDAO<Book> {
 
@@ -43,16 +41,4 @@ public class BooksDAO extends BaseDAO<Book> {
         return Book.USER;
     }
 
-    /**
-     * Returns a book with the given id, or an empty optional.
-     * @param id The id to query for.
-     * @return An optional containing the book, or empty if the book was not found.
-     */
-    public Optional<Book> getBookById(long id) {
-        return store.select(Book.class)
-                .where(Book.ID.eq(id))
-                .get()
-                .stream()
-                .findAny();
-    }
 }

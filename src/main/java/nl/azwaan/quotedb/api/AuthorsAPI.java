@@ -1,9 +1,9 @@
 package nl.azwaan.quotedb.api;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.azwaan.quotedb.Constants;
+import nl.azwaan.quotedb.api.patches.AuthorPatch;
 import nl.azwaan.quotedb.dao.AuthorsDAO;
 import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
 import nl.azwaan.quotedb.models.Author;
@@ -18,8 +18,6 @@ import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Optional;
 
 @Singleton
 @Path("/authors")
@@ -83,13 +81,4 @@ public class AuthorsAPI extends BaseAPI<Author> {
                 bookCount, Constants.MAX_PAGE_SIZE, 1, getEntityURL(req));
     }
 
-    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NON_PRIVATE)
-    private static class AuthorPatch {
-        Optional<String> firstName = Optional.empty();
-        Optional<String> lastName = Optional.empty();
-        Optional<String> middleName = Optional.empty();
-        Optional<String> initials = Optional.empty();
-        Optional<Date> dateOfBirth = Optional.empty();
-        Optional<String> biography = Optional.empty();
-    }
 }

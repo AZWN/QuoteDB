@@ -17,4 +17,10 @@ public abstract class AbstractBook extends UserSpecificModel {
 
     @ManyToOne
     protected Author author;
+
+    @Override
+    public void setUserOnSubfields(User user) {
+        super.setUserOnSubfields(user);
+        author.setUserOnSubfields(user);
+    }
 }

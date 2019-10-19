@@ -10,4 +10,10 @@ public abstract class AbstractBookQuote extends BaseQuote {
     protected Book book;
 
     protected String pageRange;
+
+    @Override
+    public void setUserOnSubfields(User user) {
+        super.setUserOnSubfields(user);
+        book.setUserOnSubfields(user);
+    }
 }

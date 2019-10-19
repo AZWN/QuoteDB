@@ -7,4 +7,6 @@
 <suppressions>
     <suppress checks="VisibilityModifier"
               files="nl.azwaan.quotedb.*"/>
+    <suppress checks="JavadocVariable"
+              files="nl.azwaan.quotedb.api.patches.*"/>
 </suppressions>

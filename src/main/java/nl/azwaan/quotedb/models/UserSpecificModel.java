@@ -1,6 +1,6 @@
 package nl.azwaan.quotedb.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.requery.Column;
 import io.requery.ManyToOne;
 import io.requery.Superclass;
@@ -10,7 +10,7 @@ public abstract class UserSpecificModel extends BaseModel {
 
     @Column(index = true, nullable = false)
     @ManyToOne
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected User user;
 
     /**
@@ -24,4 +24,12 @@ public abstract class UserSpecificModel extends BaseModel {
      * @return The user for this entity.
      */
     public abstract User getUser();
+
+    /**
+     * Set the user property for this entry, but also on all subfields.
+     * @param user The user to set.
+     */
+    public void setUserOnSubfields(User user) {
+        setUser(user);
+    }
 }

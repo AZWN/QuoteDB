@@ -36,4 +36,27 @@ public abstract class BaseQuote extends UserSpecificModel {
     @Lazy
     protected Set<Label> labels;
 
+    /**
+     * Updates title.
+     * @param title The new title.
+     */
+    public abstract void setTitle(String title);
+
+    /**
+     * Updates text.
+     * @param text The new title.
+     */
+    public abstract void setText(String text);
+
+    /**
+     * Updates note.
+     * @param note The new note.
+     */
+    public abstract void setNote(String note);
+
+    /**
+     * Gets the labels of this quote.
+     * @return The labels of this quote.
+     */
+    public abstract Set<Label> getLabels();
 }

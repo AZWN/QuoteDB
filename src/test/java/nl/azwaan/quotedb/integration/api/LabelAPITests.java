@@ -54,6 +54,7 @@ public class LabelAPITests extends AuthenticatedTest {
 
         Label param = new Label();
         param.setLabelName("Label3");
+        param.setColor("white");
 
         postBase()
                 .body(param)

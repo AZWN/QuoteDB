@@ -10,10 +10,8 @@ import nl.azwaan.quotedb.models.Author;
 import nl.azwaan.quotedb.models.Book;
 import nl.azwaan.quotedb.models.User;
 import org.jooby.Request;
-import org.jooby.mvc.Body;
 import org.jooby.mvc.Consumes;
 import org.jooby.mvc.GET;
-import org.jooby.mvc.PATCH;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
@@ -23,42 +21,11 @@ import java.util.ArrayList;
 @Path("/authors")
 @Produces("application/json")
 @Consumes("application/json")
-public class AuthorsAPI extends BaseAPI<Author> {
+public class AuthorsAPI extends BaseAPI<Author, AuthorPatch> {
 
     @Inject
     protected AuthorsAPI(AuthorsDAO dao) {
         super(dao);
-    }
-
-    /**
-     * Handler for requests to update {@link Author} resources.
-     * Can update any editable property, except the books reference.
-     * This property should be edited through the /api/books endpoint.
-     *
-     * @param req The request that is served
-     * @param id The id of the author to update
-     * @param patch The properties to be updated.
-     *
-     * @return A page containing the updated resource.
-     */
-    @PATCH
-    @Path("/:id")
-    public SingleResultPage updateAuthor(Request req, Long id, @Body AuthorPatch patch) {
-        final User authenticatedUser = getAuthenticatedUser(req);
-        final Author author = dao.getEntityById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Author.class.getName(), id));
-
-        permissionChecker.checkUpdateEntity(author, authenticatedUser);
-
-        patch.firstName.ifPresent(author::setFirstName);
-        patch.lastName.ifPresent(author::setLastName);
-        patch.middleName.ifPresent(author::setMiddleName);
-        patch.initials.ifPresent(author::setInitials);
-        patch.dateOfBirth.ifPresent(author::setDateOfBirth);
-        patch.biography.ifPresent(author::setBiography);
-
-        dao.updateEntity(author);
-        return new SingleResultPage<>(author, getEntityURL(req));
     }
 
     /**
@@ -81,4 +48,18 @@ public class AuthorsAPI extends BaseAPI<Author> {
                 bookCount, Constants.MAX_PAGE_SIZE, 1, getEntityURL(req));
     }
 
+    @Override
+    protected void applyPatch(Author author, User authenticatedUser, AuthorPatch patch) {
+        patch.firstName.ifPresent(author::setFirstName);
+        patch.lastName.ifPresent(author::setLastName);
+        patch.middleName.ifPresent(author::setMiddleName);
+        patch.initials.ifPresent(author::setInitials);
+        patch.dateOfBirth.ifPresent(author::setDateOfBirth);
+        patch.biography.ifPresent(author::setBiography);
+    }
+
+    @Override
+    protected Class<AuthorPatch> getPatchClass() {
+        return AuthorPatch.class;
+    }
 }

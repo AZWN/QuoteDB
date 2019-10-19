@@ -26,7 +26,7 @@ import org.jooby.mvc.Produces;
 @Path("/labels")
 @Produces("application/json")
 @Consumes("application/json")
-public class LabelsAPI extends BaseAPI<Label> {
+public class LabelsAPI extends BaseAPI<Label, LabelPatch> {
 
     private LabelsDAO labelsDAO;
 
@@ -47,6 +47,17 @@ public class LabelsAPI extends BaseAPI<Label> {
         }
     }
 
+    @Override
+    protected void applyPatch(Label label, User authenticatedUser, LabelPatch patch) {
+        patch.color.ifPresent(label::setColor);
+        patch.labelName.ifPresent(label::setLabelName);
+    }
+
+    @Override
+    protected Class<LabelPatch> getPatchClass() {
+        return LabelPatch.class;
+    }
+
     /**
      * Handler for patching labels.
      * @param req The handled request.
@@ -61,9 +72,6 @@ public class LabelsAPI extends BaseAPI<Label> {
         final Label label = labelsDAO.getEntityById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Label.class.getName(), id));
         permissionChecker.checkUpdateEntity(label, authenticatedUser);
-
-        patch.color.ifPresent(label::setColor);
-        patch.labelName.ifPresent(label::setLabelName);
 
         labelsDAO.updateEntity(label);
 

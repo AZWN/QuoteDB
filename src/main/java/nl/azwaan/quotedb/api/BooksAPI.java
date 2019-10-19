@@ -20,7 +20,7 @@ import org.jooby.mvc.Produces;
 @Path("/books")
 @Produces("application/json")
 @Consumes("application/json")
-public class BooksAPI extends BaseAPI<Book> {
+public class BooksAPI extends BaseAPI<Book, BookPatch> {
 
     @Inject private AuthorsDAO authorsDAO;
 
@@ -46,16 +46,6 @@ public class BooksAPI extends BaseAPI<Book> {
 
         permissionChecker.checkUpdateEntity(book, authenticatedUser);
 
-        patch.title.ifPresent(book::setTitle);
-        patch.publisher.ifPresent(book::setPublisher);
-        patch.publicationYear.ifPresent(book::setPublicationYear);
-        patch.author.ifPresent(authorId -> {
-            // TODO: Permissions
-            final Author author = authorsDAO.getEntityById(authorId)
-                    .orElseThrow(() -> new EntityNotFoundException(Author.class.getName(), authorId));
-            book.setAuthor(author);
-        });
-
         dao.updateEntity(book);
         return new SingleResultPage<>(book, getEntityURL(request));
     }
@@ -67,6 +57,24 @@ public class BooksAPI extends BaseAPI<Book> {
         // If author already in db, replace with real entity
         authorsDAO.getEntityById(entity.getAuthor().getId())
                 .ifPresent(entity::setAuthor);
+    }
+
+    @Override
+    protected void applyPatch(Book book, User authenticatedUser, BookPatch patch) {
+        patch.title.ifPresent(book::setTitle);
+        patch.publisher.ifPresent(book::setPublisher);
+        patch.publicationYear.ifPresent(book::setPublicationYear);
+        patch.author.ifPresent(authorId -> {
+            // TODO: Permissions
+            final Author author = authorsDAO.getEntityById(authorId)
+                    .orElseThrow(() -> new EntityNotFoundException(Author.class.getName(), authorId));
+            book.setAuthor(author);
+        });
+    }
+
+    @Override
+    protected Class<BookPatch> getPatchClass() {
+        return BookPatch.class;
     }
 
 }

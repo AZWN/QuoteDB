@@ -2,12 +2,10 @@ package nl.azwaan.quotedb.api;
 
 import com.google.inject.Inject;
 import io.requery.Persistable;
-import io.requery.query.Result;
-import io.requery.query.Return;
-import io.requery.query.Scalar;
-import io.requery.query.Selection;
 import net.moznion.uribuildertiny.URIBuilderTiny;
 import nl.azwaan.quotedb.Constants;
+import nl.azwaan.quotedb.api.filters.BaseFilterBuilder;
+import nl.azwaan.quotedb.api.filters.FilterBuilder;
 import nl.azwaan.quotedb.dao.BaseDAO;
 import nl.azwaan.quotedb.dao.UsersDAO;
 import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
 
@@ -47,8 +44,9 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
         this.dao = dao;
     }
 
-    protected MultiResultPage<T> getPagedResult(Request request, BaseDAO<T> dao,
-            Function<Selection, Return> queryFilterBuilder)
+    protected <TRes extends UserSpecificModel & Persistable> MultiResultPage<TRes> getPagedResult(
+            Request request, BaseDAO<TRes> dao, PermissionChecker<TRes> resPermissionChecker,
+            FilterBuilder filterBuilder)
     {
         final int pageSize = request.param("pageSize").intValue(Constants.MAX_PAGE_SIZE);
         final int pageNumber = request.param("page").intValue(1);
@@ -61,19 +59,19 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
             throw new IllegalArgumentException("pageNumber must be 0 or more");
         }
 
-        final int totalResults = ((Scalar<Integer>) queryFilterBuilder.apply(dao.countQuery()).get()).value();
+        final int totalResults = filterBuilder.finalizeQuery(filterBuilder.addFilter(dao.countQuery())).get().value();
 
-        final List<T> data = new ArrayList<>(pageSize);
+        final List<TRes> data = new ArrayList<>(pageSize);
 
-        ((Result<T>) queryFilterBuilder.apply(dao.selectQuery()).get())
+        filterBuilder.finalizeQuery(filterBuilder.addFilter(dao.selectQuery())).get()
                 .iterator((pageNumber - 1) * pageSize, pageSize)
                 .forEachRemaining(elem -> {
                     // Check if entity is allowed to be read.
-                    permissionChecker.checkReadEntity(elem, getAuthenticatedUser(request));
+                    resPermissionChecker.checkReadEntity(elem, getAuthenticatedUser(request));
                     data.add(elem);
                 });
 
-        final MultiResultPage<T> resultPage =
+        final MultiResultPage<TRes> resultPage =
                 MultiResultPage.resultPageFor(data, totalResults, pageSize, pageNumber, request.path());
 
         return resultPage;
@@ -88,10 +86,12 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
     @GET
     @Path("")
     public MultiResultPage<T> getAll(Request request) {
-        final User user = getAuthenticatedUser(request);
+        return this.getPagedResult(request, dao, permissionChecker, getDefaultFilterBuilder(request));
+    }
 
-        return getPagedResult(request, dao, s -> (Return) s.where(dao.getDeletedProperty().eq(false))
-                        .and(dao.getUserAttribute().eq(user)));
+    protected FilterBuilder getDefaultFilterBuilder(Request request) {
+        final User user = getAuthenticatedUser(request);
+        return new BaseFilterBuilder<>(dao, user, request);
     }
 
     /**

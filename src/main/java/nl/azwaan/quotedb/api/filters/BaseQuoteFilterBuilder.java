@@ -9,7 +9,7 @@ import org.jooby.Request;
 
 import java.util.List;
 
-public abstract class BaseQuoteFilter<TQuote extends BaseQuote & Persistable> extends BaseFilterBuilder<TQuote> {
+public abstract class BaseQuoteFilterBuilder<TQuote extends BaseQuote & Persistable> extends BaseFilterBuilder<TQuote> {
     /**
      * Constructs a new basic quote filter builder.
      * Filters for owning user, and filters out deleted entities by default.
@@ -19,7 +19,7 @@ public abstract class BaseQuoteFilter<TQuote extends BaseQuote & Persistable> ex
      * @param authenticatedUser The user for which to filter.
      * @param request           The request to build a filter for.
      */
-    public BaseQuoteFilter(BaseDAO<TQuote> dao, User authenticatedUser, Request request) {
+    public BaseQuoteFilterBuilder(BaseDAO<TQuote> dao, User authenticatedUser, Request request) {
         super(dao, authenticatedUser, request);
     }
 

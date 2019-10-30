@@ -2,7 +2,7 @@ package nl.azwaan.quotedb.api;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.azwaan.quotedb.api.filters.BookQuoteFilter;
+import nl.azwaan.quotedb.api.filters.BookQuoteFilterBuilder;
 import nl.azwaan.quotedb.api.filters.FilterBuilder;
 import nl.azwaan.quotedb.api.patches.BookQuotePatch;
 import nl.azwaan.quotedb.dao.BookQuotesDAO;
@@ -50,6 +50,6 @@ public class BookQuotesAPI extends BaseQuoteAPI<BookQuote, BookQuotePatch> {
 
     @Override
     protected FilterBuilder getDefaultFilterBuilder(Request request) {
-        return new BookQuoteFilter(dao, getAuthenticatedUser(request), request);
+        return new BookQuoteFilterBuilder(dao, getAuthenticatedUser(request), request);
     }
 }

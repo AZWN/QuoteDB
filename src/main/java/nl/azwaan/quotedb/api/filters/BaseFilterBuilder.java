@@ -3,10 +3,12 @@ package nl.azwaan.quotedb.api.filters;
 import io.requery.Persistable;
 import io.requery.meta.StringAttribute;
 import io.requery.query.Expression;
+import io.requery.query.Limit;
 import io.requery.query.LogicalCondition;
 import io.requery.query.Return;
 import io.requery.query.Selection;
 import io.requery.query.WhereAndOr;
+import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.dao.BaseDAO;
 import nl.azwaan.quotedb.models.User;
 import nl.azwaan.quotedb.models.UserSpecificModel;
@@ -17,8 +19,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
+
 public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implements FilterBuilder {
 
+    private final int resultSetSize;
+    private final int offset;
     private BaseDAO<T> dao;
     private User authenticatedUser;
 
@@ -35,6 +41,16 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
     public BaseFilterBuilder(BaseDAO<T> dao, User authenticatedUser, Request request) {
         this.dao = dao;
         this.authenticatedUser = authenticatedUser;
+        resultSetSize = request.param("pageSize").intValue(Constants.MAX_PAGE_SIZE);
+        offset = (request.param("page").intValue(1) - 1) * resultSetSize;
+
+        if (resultSetSize < 1 || resultSetSize > MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException("pageSize must be between 1 and 100 (inclusive)");
+        }
+
+        if (offset < 0) {
+            throw new IllegalArgumentException("pageNumber must be 1 or more");
+        }
 
         initialFilter = dao.getIDProperty().greaterThanOrEqual(-1L);
         filters = getFilters(request);
@@ -62,8 +78,7 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
         return result;
     }
 
-    @Override
-    public <R> WhereAndOr<R> addFilter(Selection<R> s) {
+    protected <R> WhereAndOr<R> addFilter(Selection<R> s) {
         WhereAndOr<R> res = s.where(initialFilter);
 
         for (Filter filter : filters) {
@@ -74,7 +89,20 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
     }
 
     @Override
-    public <R> Return<R> finalizeQuery(WhereAndOr<R> filteredQuery) {
+    public <R> Return<R> buildQuery(Selection<R> baseQuery, boolean includePaging) {
+        final WhereAndOr<R> intermediate = addFilter(baseQuery);
+        if (includePaging) {
+            return finalizeQuery(intermediate);
+        }
+        return intermediate;
+    }
+
+    protected <R> Return<R> finalizeQuery(WhereAndOr<R> filteredQuery) {
+        final Limit<R> preProcessedQuery = preFinalize(filteredQuery);
+        return preProcessedQuery.limit(resultSetSize).offset(offset);
+    }
+
+    protected <R> Limit<R> preFinalize(WhereAndOr<R> filteredQuery) {
         return filteredQuery;
     }
 
@@ -90,5 +118,13 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
      */
     public void addFilters(Collection<Filter> filters) {
         this.filters.addAll(filters);
+    }
+
+    public int getResultCount() {
+        return resultSetSize;
+    }
+
+    public int getOffset() {
+        return offset;
     }
 }

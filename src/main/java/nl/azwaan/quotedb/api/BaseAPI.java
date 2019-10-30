@@ -3,7 +3,6 @@ package nl.azwaan.quotedb.api;
 import com.google.inject.Inject;
 import io.requery.Persistable;
 import net.moznion.uribuildertiny.URIBuilderTiny;
-import nl.azwaan.quotedb.Constants;
 import nl.azwaan.quotedb.api.filters.BaseFilterBuilder;
 import nl.azwaan.quotedb.api.filters.FilterBuilder;
 import nl.azwaan.quotedb.dao.BaseDAO;
@@ -29,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static nl.azwaan.quotedb.Constants.MAX_PAGE_SIZE;
-
 @Produces("application/json")
 @Consumes("application/json")
 public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch> {
@@ -48,28 +45,19 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
             Request request, BaseDAO<TRes> dao, PermissionChecker<TRes> resPermissionChecker,
             FilterBuilder filterBuilder)
     {
-        final int pageSize = request.param("pageSize").intValue(Constants.MAX_PAGE_SIZE);
-        final int pageNumber = request.param("page").intValue(1);
+        final int totalResults = filterBuilder.buildQuery(dao.countQuery(), false).get().value();
 
-        if (pageSize < 1 || pageSize > MAX_PAGE_SIZE) {
-            throw new IllegalArgumentException("pageSize must be between 1 and 100 (inclusive)");
-        }
-
-        if (pageNumber < 0) {
-            throw new IllegalArgumentException("pageNumber must be 0 or more");
-        }
-
-        final int totalResults = filterBuilder.finalizeQuery(filterBuilder.addFilter(dao.countQuery())).get().value();
+        final int pageSize = filterBuilder.getResultCount();
+        final int pageNumber = filterBuilder.getOffset() / filterBuilder.getResultCount();
 
         final List<TRes> data = new ArrayList<>(pageSize);
+        final User authenticatedUser = getAuthenticatedUser(request);
 
-        filterBuilder.finalizeQuery(filterBuilder.addFilter(dao.selectQuery())).get()
-                .iterator((pageNumber - 1) * pageSize, pageSize)
-                .forEachRemaining(elem -> {
-                    // Check if entity is allowed to be read.
-                    resPermissionChecker.checkReadEntity(elem, getAuthenticatedUser(request));
-                    data.add(elem);
-                });
+        filterBuilder.buildQuery(dao.selectQuery()).get()
+                .stream()
+                // Check if entity is allowed to be read.
+                .peek(elem -> resPermissionChecker.checkReadEntity(elem, authenticatedUser))
+                .forEach(data::add);
 
         final MultiResultPage<TRes> resultPage =
                 MultiResultPage.resultPageFor(data, totalResults, pageSize, pageNumber, request.path());

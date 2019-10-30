@@ -2,6 +2,8 @@ package nl.azwaan.quotedb.api;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import nl.azwaan.quotedb.api.filters.BookQuoteFilter;
+import nl.azwaan.quotedb.api.filters.FilterBuilder;
 import nl.azwaan.quotedb.api.patches.BookQuotePatch;
 import nl.azwaan.quotedb.dao.BookQuotesDAO;
 import nl.azwaan.quotedb.dao.BooksDAO;
@@ -10,6 +12,7 @@ import nl.azwaan.quotedb.models.Book;
 import nl.azwaan.quotedb.models.BookQuote;
 import nl.azwaan.quotedb.models.User;
 import nl.azwaan.quotedb.permissions.PermissionChecker;
+import org.jooby.Request;
 import org.jooby.mvc.Consumes;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
@@ -43,5 +46,10 @@ public class BookQuotesAPI extends BaseQuoteAPI<BookQuote, BookQuotePatch> {
     @Override
     protected Class<BookQuotePatch> getPatchClass() {
         return BookQuotePatch.class;
+    }
+
+    @Override
+    protected FilterBuilder getDefaultFilterBuilder(Request request) {
+        return new BookQuoteFilter(dao, getAuthenticatedUser(request), request);
     }
 }

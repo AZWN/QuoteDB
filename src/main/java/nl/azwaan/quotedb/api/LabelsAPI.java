@@ -3,9 +3,10 @@ package nl.azwaan.quotedb.api;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import nl.azwaan.quotedb.api.filters.FilterBuilder;
+import nl.azwaan.quotedb.api.filters.LabelsFilterBuilder;
 import nl.azwaan.quotedb.api.patches.LabelPatch;
 import nl.azwaan.quotedb.dao.LabelsDAO;
-import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
 import nl.azwaan.quotedb.exceptions.ResourceConflictException;
 import nl.azwaan.quotedb.models.Label;
 
@@ -13,7 +14,6 @@ import nl.azwaan.quotedb.models.User;
 import org.jooby.Request;
 import org.jooby.mvc.Body;
 import org.jooby.mvc.Consumes;
-import org.jooby.mvc.PATCH;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
@@ -58,23 +58,8 @@ public class LabelsAPI extends BaseAPI<Label, LabelPatch> {
         return LabelPatch.class;
     }
 
-    /**
-     * Handler for patching labels.
-     * @param req The handled request.
-     * @param id The id of the label to patch
-     * @param patch The patch to be applied
-     * @return A page containing the patched entity
-     */
-    @PATCH
-    @Path("/:id")
-    public SingleResultPage<Label> updateLabel(Request req, Long id, @Body LabelPatch patch) {
-        final User authenticatedUser = getAuthenticatedUser(req);
-        final Label label = labelsDAO.getEntityById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Label.class.getName(), id));
-        permissionChecker.checkUpdateEntity(label, authenticatedUser);
-
-        labelsDAO.updateEntity(label);
-
-        return new SingleResultPage<>(label, getEntityURL(req));
+    @Override
+    protected FilterBuilder getDefaultFilterBuilder(Request request) {
+        return new LabelsFilterBuilder(dao, getAuthenticatedUser(request), request);
     }
 }

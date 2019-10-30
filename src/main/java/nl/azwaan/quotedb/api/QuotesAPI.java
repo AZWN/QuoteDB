@@ -3,7 +3,7 @@ package nl.azwaan.quotedb.api;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.azwaan.quotedb.api.filters.FilterBuilder;
-import nl.azwaan.quotedb.api.filters.QuickQuoteFilter;
+import nl.azwaan.quotedb.api.filters.QuickQuoteFilterBuilder;
 import nl.azwaan.quotedb.api.patches.QuotePatch;
 import nl.azwaan.quotedb.dao.QuotesDAO;
 import nl.azwaan.quotedb.models.QuickQuote;
@@ -38,6 +38,6 @@ public class QuotesAPI extends BaseQuoteAPI<QuickQuote, QuotePatch> {
 
     @Override
     protected FilterBuilder getDefaultFilterBuilder(Request request) {
-        return new QuickQuoteFilter(dao, getAuthenticatedUser(request), request);
+        return new QuickQuoteFilterBuilder(dao, getAuthenticatedUser(request), request);
     }
 }

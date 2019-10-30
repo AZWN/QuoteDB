@@ -29,27 +29,6 @@ public class BooksAPI extends BaseAPI<Book, BookPatch> {
         super(dao);
     }
 
-    /**
-     * Updates a book resource.
-     * @param request The request to be served
-     * @param id The id of the book to be updated.
-     * @param patch The properties to be updated.
-     *
-     * @return A page containing the updated resource.
-     */
-    @PATCH
-    @Path("/:id")
-    public SingleResultPage<Book> updateBook(Request request, Long id, @Body BookPatch patch) {
-        final User authenticatedUser = getAuthenticatedUser(request);
-        final Book book = dao.getEntityById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Book.class.getName(), id));
-
-        permissionChecker.checkUpdateEntity(book, authenticatedUser);
-
-        dao.updateEntity(book);
-        return new SingleResultPage<>(book, getEntityURL(request));
-    }
-
     @Override
     protected void resolveReferencesForNewEntity(Book entity, User authenticatedUser) {
         super.resolveReferencesForNewEntity(entity, authenticatedUser);

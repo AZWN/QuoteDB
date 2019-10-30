@@ -146,7 +146,7 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
         final User user = getAuthenticatedUser(req);
         permissionChecker.checkReadEntity(entity, user);
 
-        return new SingleResultPage<T>(entity, getEntityURL(req));
+        return new SingleResultPage<>(entity, getEntityURL(req));
     }
 
     /**

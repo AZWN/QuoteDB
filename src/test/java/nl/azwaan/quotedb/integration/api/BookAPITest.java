@@ -65,7 +65,8 @@ public class BookAPITest extends AuthenticatedTest {
                 .then()
                 .statusCode(201);
 
-        assertThat(((Scalar<Integer>)store.count(Author.class).get()).value(), equalTo(1));
+        assertThat(((Scalar<Integer>)store.count(Author.class)
+                .where(Author.FIRST_NAME.eq(author1.getFirstName())).get()).value(), equalTo(1));
     }
 
     @Test

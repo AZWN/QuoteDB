@@ -1,6 +1,7 @@
 package nl.azwaan.quotedb.models;
 
 import io.requery.Column;
+import io.requery.Index;
 import io.requery.JunctionTable;
 import io.requery.Lazy;
 import io.requery.ManyToMany;
@@ -15,12 +16,14 @@ public abstract class BaseQuote extends UserSpecificModel {
      * Quote name/title.
      */
     @Column(nullable = false, index = true)
+    @Index
     protected String title;
 
     /**
      * Quote text.
      */
     @Column(nullable = false, index = true)
+    @Index
     protected String text;
 
     /**
@@ -59,4 +62,10 @@ public abstract class BaseQuote extends UserSpecificModel {
      * @return The labels of this quote.
      */
     public abstract Set<Label> getLabels();
+
+    @Override
+    public void setUserOnSubfields(User user) {
+        super.setUserOnSubfields(user);
+        getLabels().forEach(lbl -> lbl.setUser(user));
+    }
 }

@@ -2,6 +2,7 @@ package nl.azwaan.quotedb.models;
 
 import io.requery.Entity;
 import io.requery.Column;
+import io.requery.Index;
 
 /**
  * Entity definition of a Label. Labels can be attached to Quote, to enable custom grouping.
@@ -15,6 +16,7 @@ public abstract class AbstractLabel extends UserSpecificModel {
      * Label name.
      */
     @Column(nullable = false, index = true)
+    @Index
     protected String labelName;
 
     /**

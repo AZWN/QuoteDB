@@ -40,6 +40,7 @@ public class QuoteDBApp extends Jooby {
                 .schema(TableCreationMode.CREATE_NOT_EXISTS)
                 .doWith(s -> s.setTransactionMode(TransactionMode.NONE)));
         // Use flyway to add indices on all platforms except test.
+
         on("test", () -> { }).orElse(() -> use(new Flywaydb()));
 
         // React frontend setup

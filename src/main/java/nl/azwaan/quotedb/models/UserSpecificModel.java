@@ -8,7 +8,7 @@ import io.requery.Superclass;
 @Superclass
 public abstract class UserSpecificModel extends BaseModel {
 
-    @Column(index = true, nullable = false)
+    @Column(index = true, nullable = false, name = "owner")
     @ManyToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected User user;

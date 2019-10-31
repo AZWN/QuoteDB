@@ -15,7 +15,7 @@ import nl.azwaan.quotedb.models.User;
  * @author Aron Zwaan
  */
 @Singleton
-public class BookQuotesDAO extends BaseDAO<BookQuote> {
+public class BookQuotesDAO extends BaseQuotesDAO<BookQuote> {
     /**
      * Constructs a {@link BookQuote}.
      *

@@ -97,7 +97,7 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
         final T entity = req.body(dao.getEntityClass());
         resolveReferencesForNewEntity(entity, authenticatedUser);
         permissionChecker.checkCreateEntity(entity, authenticatedUser);
-        checkCanInsertEntity(entity);
+        checkCanInsertEntity(entity, authenticatedUser);
 
         final T e = dao.upsertEntity(entity);
         final String link = getEntityURL(req, e.getId());
@@ -128,7 +128,7 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
                     .toString();
     }
 
-    protected void checkCanInsertEntity(T entity) { }
+    protected void checkCanInsertEntity(T entity, User authenticatedUser) { }
 
     /**
      * Gets a single entity.

@@ -41,8 +41,8 @@ public class LabelsAPI extends BaseAPI<Label, LabelPatch> {
     }
 
     @Override
-    protected void checkCanInsertEntity(@Body Label label) {
-        if (labelsDAO.labelExists(label.getLabelName())) {
+    protected void checkCanInsertEntity(@Body Label label, User authenticatedUser) {
+        if (labelsDAO.labelExists(label.getLabelName(), authenticatedUser)) {
             throw new ResourceConflictException("Label with name '%s' already exists", label.getLabelName());
         }
     }

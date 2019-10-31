@@ -12,7 +12,9 @@ import nl.azwaan.quotedb.models.User;
 import nl.azwaan.quotedb.permissions.PermissionChecker;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class BaseQuoteAPI<TQuote extends BaseQuote & Persistable,
         TPatch extends QuotePatch> extends BaseAPI<TQuote, TPatch>
@@ -45,5 +47,27 @@ public abstract class BaseQuoteAPI<TQuote extends BaseQuote & Persistable,
                     .collect(Collectors.toList());
             quote.getLabels().removeAll(removedLabels);
         });
+    }
+
+    @Override
+    protected void resolveReferencesForNewEntity(TQuote entity, User authenticatedUser) {
+        super.resolveReferencesForNewEntity(entity, authenticatedUser);
+
+        // Due to the fact that composed keys are not expressable when using @Superclass
+        // We need to manually map the labels to the right entities
+        try (Stream<Label> labelsStream = entity.getLabels().stream()) {
+            final Set<Label> labels = labelsStream
+                    .map(lbl -> {
+                        if (labelsDAO.labelExists(lbl.getLabelName(), authenticatedUser)) {
+                            return labelsDAO.getLabelByNameAndUser(lbl.getLabelName(), authenticatedUser);
+                        }
+                        lbl.setUser(authenticatedUser);
+                        return labelsDAO.insertEntity(lbl);
+                    })
+                    .collect(Collectors.toSet());
+
+            entity.getLabels().clear();
+            entity.getLabels().addAll(labels);
+        }
     }
 }

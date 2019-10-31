@@ -83,7 +83,7 @@ public abstract class BaseDAO<T extends Persistable> {
      * @return The upserted entity.
      */
     public T upsertEntity(T entity) {
-        store.upsert(entity);
+        store.upsert(store.refresh(entity));
         return store.refresh(entity);
     }
 

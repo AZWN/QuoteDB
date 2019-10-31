@@ -3,6 +3,7 @@ package nl.azwaan.quotedb.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.requery.Column;
 import io.requery.Entity;
+import io.requery.Index;
 import io.requery.Lazy;
 import io.requery.OneToMany;
 
@@ -12,10 +13,12 @@ import java.util.Set;
 @Entity
 public abstract class AbstractAuthor extends UserSpecificModel {
 
-    @Column(nullable = false)
+    @Column(nullable = false, index = true)
+    @Index
     protected String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, index = true)
+    @Index
     protected String lastName;
 
     @Column(nullable = false)
@@ -27,7 +30,7 @@ public abstract class AbstractAuthor extends UserSpecificModel {
     @Column(nullable = false)
     protected Date dateOfBirth;
 
-    @Column(definition = "MEDIUMTEXT")
+    @Column(definition = "TEXT")
     protected String biography;
 
     @OneToMany

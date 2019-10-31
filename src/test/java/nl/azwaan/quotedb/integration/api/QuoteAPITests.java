@@ -2,7 +2,9 @@ package nl.azwaan.quotedb.integration.api;
 
 import io.requery.EntityStore;
 import io.requery.Persistable;
+import io.requery.query.Scalar;
 import io.restassured.http.ContentType;
+import nl.azwaan.quotedb.models.Label;
 import nl.azwaan.quotedb.models.QuickQuote;
 import nl.azwaan.quotedb.models.User;
 import org.junit.Test;
@@ -113,6 +115,38 @@ public class QuoteAPITests extends AuthenticatedTest {
         assertThat(result.getLastModifiedDate(), is(not(nullValue())));
     }
 
+    @Test
+    public void testMixedLabelsInsert() {
+        EntityStore store = app.require(EntityStore.class);
+        final User user = getUser();
+
+        Label label1 = new Label();
+        label1.setLabelName("Label-1");
+        label1.setColor("white");
+        label1.setUser(user);
+
+        store.insert(label1);
+
+        Label label2 = new Label();
+        label2.setLabelName("Label-2");
+        label2.setColor("black");
+        label2.setUser(user);
+
+        QuickQuote quote = new QuickQuote();
+        quote.setTitle("Mixed label quote");
+        quote.setText("Quote with inserted and non-inserted label");
+        quote.getLabels().add(label1);
+        quote.getLabels().add(label2);
+
+        postBase()
+                .body(quote)
+                .post("/api/quotes")
+                .then()
+                .statusCode(201);
+
+        assertThat(((Scalar<Integer>)store.count(Label.class).get()).value(), equalTo(2));
+        assertThat(((Scalar<Integer>)store.count(QuickQuote.class).get()).value(), equalTo(1));
+    }
 
     private void insertQuotes(int quoteCount) {
         User user = getUser();

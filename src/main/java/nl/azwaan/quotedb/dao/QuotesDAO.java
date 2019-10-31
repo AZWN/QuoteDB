@@ -15,7 +15,7 @@ import nl.azwaan.quotedb.models.User;
  * @author Aron Zwaan
  */
 @Singleton
-public class QuotesDAO extends BaseDAO<QuickQuote> {
+public class QuotesDAO extends BaseQuotesDAO<QuickQuote> {
 
     /**
      * Creates object to query Quotes.
@@ -46,5 +46,4 @@ public class QuotesDAO extends BaseDAO<QuickQuote> {
     public QueryAttribute<QuickQuote, User> getUserAttribute() {
         return QuickQuote.USER;
     }
-
 }

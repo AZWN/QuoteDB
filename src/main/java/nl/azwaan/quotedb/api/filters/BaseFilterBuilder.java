@@ -78,7 +78,13 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
         return result;
     }
 
-    protected <R> WhereAndOr<R> addFilter(Selection<R> s) {
+    /**
+     * Adds where filter to query.
+     * @param s The base query
+     * @param <R> The query result type
+     * @return The query with where clause
+     */
+    public <R> WhereAndOr<R> addFilter(Selection<R> s) {
         WhereAndOr<R> res = s.where(initialFilter);
 
         for (Filter filter : filters) {

@@ -30,7 +30,7 @@ public abstract class BaseModel {
      * Before inserting the object, set the generationDate to the current {@link Date}.
      */
     @PreInsert
-    protected void setGenerationDate() {
+    protected void updateGenerationDate() {
         generationDate = new Date();
         lastModifiedDate = new Date();
     }
@@ -45,17 +45,30 @@ public abstract class BaseModel {
      * Before updating the object, set lastModifiedDate to current date.
      */
     @PreUpdate
-    protected void setLastModifiedDate() {
+    protected void updateLastModifiedDate() {
         lastModifiedDate = new Date();
     }
 
     /**
      * True if deleted, false otherwise.
      */
+    @Column(nullable = false)
     protected boolean deleted;
 
     /**
      * @return Returns the id of the entity.
      */
     public abstract Long getId();
+
+    /**
+     * Returns the date on which this entity is generated.
+     * @return The generation date
+     */
+    public abstract Date getGenerationDate();
+
+    /**
+     * Returns the date this entity is last updated.
+     * @return The last modified date.
+     */
+    public abstract Date getLastModifiedDate();
 }

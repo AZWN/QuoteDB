@@ -5,6 +5,9 @@ import io.requery.Persistable;
 import net.moznion.uribuildertiny.URIBuilderTiny;
 import nl.azwaan.quotedb.api.filters.BaseFilterBuilder;
 import nl.azwaan.quotedb.api.filters.FilterBuilder;
+import nl.azwaan.quotedb.api.paging.MultiResultPage;
+import nl.azwaan.quotedb.api.paging.PageHelpers;
+import nl.azwaan.quotedb.api.paging.SingleResultPage;
 import nl.azwaan.quotedb.dao.BaseDAO;
 import nl.azwaan.quotedb.dao.UsersDAO;
 import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
@@ -23,9 +26,7 @@ import org.jooby.mvc.POST;
 import org.jooby.mvc.Path;
 import org.jooby.mvc.Produces;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 @Produces("application/json")
@@ -41,30 +42,6 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
         this.dao = dao;
     }
 
-    protected <TRes extends UserSpecificModel & Persistable> MultiResultPage<TRes> getPagedResult(
-            Request request, BaseDAO<TRes> dao, PermissionChecker<TRes> resPermissionChecker,
-            FilterBuilder filterBuilder)
-    {
-        final int totalResults = filterBuilder.buildQuery(dao.countQuery(), false).get().value();
-
-        final int pageSize = filterBuilder.getResultCount();
-        final int pageNumber = filterBuilder.getOffset() / filterBuilder.getResultCount();
-
-        final List<TRes> data = new ArrayList<>(pageSize);
-        final User authenticatedUser = getAuthenticatedUser(request);
-
-        filterBuilder.buildQuery(dao.selectQuery()).get()
-                .stream()
-                // Check if entity is allowed to be read.
-                .peek(elem -> resPermissionChecker.checkReadEntity(elem, authenticatedUser))
-                .forEach(data::add);
-
-        final MultiResultPage<TRes> resultPage =
-                MultiResultPage.resultPageFor(data, totalResults, pageSize, pageNumber, request.path());
-
-        return resultPage;
-    }
-
 
     /**
      * Returns all entities for this resource.
@@ -74,7 +51,8 @@ public abstract class BaseAPI<T extends UserSpecificModel & Persistable, TPatch>
     @GET
     @Path("")
     public MultiResultPage<T> getAll(Request request) {
-        return this.getPagedResult(request, dao, permissionChecker, getDefaultFilterBuilder(request));
+        return PageHelpers.getPagedResult(request, dao, getAuthenticatedUser(request),
+                permissionChecker, getDefaultFilterBuilder(request));
     }
 
     protected FilterBuilder getDefaultFilterBuilder(Request request) {

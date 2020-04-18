@@ -6,6 +6,8 @@ import nl.azwaan.quotedb.api.filters.BookFilterBuilder;
 import nl.azwaan.quotedb.api.filters.BookQuoteFilterBuilder;
 import nl.azwaan.quotedb.api.filters.EqualityFilter;
 import nl.azwaan.quotedb.api.filters.FilterBuilder;
+import nl.azwaan.quotedb.api.paging.MultiResultPage;
+import nl.azwaan.quotedb.api.paging.PageHelpers;
 import nl.azwaan.quotedb.api.patches.BookPatch;
 import nl.azwaan.quotedb.dao.AuthorsDAO;
 import nl.azwaan.quotedb.dao.BookQuotesDAO;
@@ -79,11 +81,13 @@ public class BooksAPI extends BaseAPI<Book, BookPatch> {
      * @return A page containing all the quotes in the book.
      */
     @GET
-    @Path("/:id")
+    @Path("/:id/quotes")
     public MultiResultPage<BookQuote> getQuotesFromBook(Request request, Long id) {
+        final User authenticatedUser = getAuthenticatedUser(request);
         final BookQuoteFilterBuilder filterBuilder = new BookQuoteFilterBuilder(bookQuotesDAO,
-                getAuthenticatedUser(request), request);
+                authenticatedUser, request);
         filterBuilder.addFilters(Collections.singletonList(new EqualityFilter<>(BookQuote.BOOK_ID, id)));
-        return getPagedResult(request, bookQuotesDAO, bookQuotePermissionChecker, filterBuilder);
+        return PageHelpers.getPagedResult(request, bookQuotesDAO, authenticatedUser,
+                bookQuotePermissionChecker, filterBuilder);
     }
 }

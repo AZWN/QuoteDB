@@ -2,8 +2,8 @@ package nl.azwaan.quotedb.api;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.azwaan.quotedb.api.filters.BookQuoteFilterBuilder;
-import nl.azwaan.quotedb.api.filters.FilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.BookQuoteFilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.FilterBuilder;
 import nl.azwaan.quotedb.api.patches.BookQuotePatch;
 import nl.azwaan.quotedb.dao.BookQuotesDAO;
 import nl.azwaan.quotedb.dao.BooksDAO;

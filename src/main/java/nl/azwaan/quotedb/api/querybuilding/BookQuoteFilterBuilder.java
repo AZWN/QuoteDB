@@ -1,4 +1,4 @@
-package nl.azwaan.quotedb.api.filters;
+package nl.azwaan.quotedb.api.querybuilding;
 
 import io.requery.meta.StringAttribute;
 import nl.azwaan.quotedb.dao.BaseDAO;

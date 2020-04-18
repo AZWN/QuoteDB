@@ -3,8 +3,8 @@ package nl.azwaan.quotedb.api;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import nl.azwaan.quotedb.api.filters.FilterBuilder;
-import nl.azwaan.quotedb.api.filters.LabelsFilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.FilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.LabelsFilterBuilder;
 import nl.azwaan.quotedb.api.patches.LabelPatch;
 import nl.azwaan.quotedb.dao.LabelsDAO;
 import nl.azwaan.quotedb.exceptions.ResourceConflictException;

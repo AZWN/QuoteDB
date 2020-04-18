@@ -1,7 +1,7 @@
 package nl.azwaan.quotedb.api;
 
-import nl.azwaan.quotedb.api.filters.BookQuoteFilterBuilder;
-import nl.azwaan.quotedb.api.filters.QuickQuoteFilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.BookQuoteFilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.QuickQuoteFilterBuilder;
 import nl.azwaan.quotedb.api.paging.MultiResultPage;
 import nl.azwaan.quotedb.dao.BookQuotesDAO;
 import nl.azwaan.quotedb.dao.QuotesDAO;

@@ -1,1 +1,0 @@
-create unique index if not exists user_labelName_unique on label (owner, labelName);

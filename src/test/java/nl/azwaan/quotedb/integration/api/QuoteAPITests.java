@@ -2,6 +2,7 @@ package nl.azwaan.quotedb.integration.api;
 
 import io.requery.EntityStore;
 import io.requery.Persistable;
+import io.requery.query.Result;
 import io.requery.query.Scalar;
 import io.restassured.http.ContentType;
 import nl.azwaan.quotedb.models.Label;
@@ -10,6 +11,7 @@ import nl.azwaan.quotedb.models.User;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -146,6 +148,91 @@ public class QuoteAPITests extends AuthenticatedTest {
 
         assertThat(((Scalar<Integer>)store.count(Label.class).get()).value(), equalTo(2));
         assertThat(((Scalar<Integer>)store.count(QuickQuote.class).get()).value(), equalTo(1));
+
+        Set<Label> labels = ((Result<QuickQuote>) store.select(QuickQuote.class).get()).first().getLabels();
+        label2 = ((Result<Label>) store.select(Label.class).where(Label.LABEL_NAME.eq("Label-2")).get()).first();
+
+        assertThat(labels.size(), equalTo(2));
+        assertThat(labels, hasItem(label1));
+        assertThat(labels, hasItem(label2));
+    }
+
+    @Test
+    public void testTextFilterWildcard() {
+        EntityStore store = app.require(EntityStore.class);
+        User user = getUser();
+
+        QuickQuote quote1 = new QuickQuote();
+        quote1.setText("Butterfly");
+        quote1.setTitle("Butterfly");
+        quote1.setUser(user);
+
+        QuickQuote quote2 = new QuickQuote();
+        quote2.setTitle("Wil je thee?");
+        quote2.setText("Ja, met smaakje");
+        quote2.setUser(user);
+
+        store.insert(quote1);
+        store.insert(quote2);
+
+        getBase()
+                .get("/api/quotes?text=%smaakje")
+                .then()
+                .statusCode(200)
+                .body("data.size()", equalTo(1))
+                .body("data[0].title", equalTo("Wil je thee?"));
+    }
+
+    @Test
+    public void testTextFilter() {
+        EntityStore store = app.require(EntityStore.class);
+        User user = getUser();
+
+        QuickQuote quote1 = new QuickQuote();
+        quote1.setText("Butterfly");
+        quote1.setTitle("Butterfly");
+        quote1.setUser(user);
+
+        QuickQuote quote2 = new QuickQuote();
+        quote2.setTitle("Wil je thee?");
+        quote2.setText("Ja, met smaakje");
+        quote2.setUser(user);
+
+        store.insert(quote1);
+        store.insert(quote2);
+
+        getBase()
+                .get("/api/quotes?text=Ja, met smaakje")
+                .then()
+                .statusCode(200)
+                .body("data.size()", equalTo(1))
+                .body("data[0].title", equalTo("Wil je thee?"));
+    }
+
+    @Test
+    public void testTitleFilter() {
+        EntityStore store = app.require(EntityStore.class);
+        User user = getUser();
+
+        QuickQuote quote1 = new QuickQuote();
+        quote1.setText("Butterfly");
+        quote1.setTitle("Butterfly");
+        quote1.setUser(user);
+
+        QuickQuote quote2 = new QuickQuote();
+        quote2.setTitle("Wil je thee?");
+        quote2.setText("Ja, met smaakje");
+        quote2.setUser(user);
+
+        store.insert(quote1);
+        store.insert(quote2);
+
+        getBase()
+                .get("/api/quotes?title=Butterfly")
+                .then()
+                .statusCode(200)
+                .body("data.size()", equalTo(1))
+                .body("data[0].text", equalTo("Butterfly"));
     }
 
     private void insertQuotes(int quoteCount) {

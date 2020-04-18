@@ -6,9 +6,6 @@
     </encoder>
   </appender>
 
-  <logger name="org.jooby.jdbi" level="DEBUG" />
-  <logger name="org.flywaydb" level="DEBUG" />
-
   <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>

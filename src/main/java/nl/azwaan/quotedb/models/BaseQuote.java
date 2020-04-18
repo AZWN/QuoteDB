@@ -6,6 +6,7 @@ import io.requery.JunctionTable;
 import io.requery.Lazy;
 import io.requery.ManyToMany;
 import io.requery.Superclass;
+import io.requery.Transient;
 
 import java.util.Set;
 
@@ -22,13 +23,14 @@ public abstract class BaseQuote extends UserSpecificModel {
     /**
      * Quote text.
      */
-    @Column(nullable = false, index = true)
+    @Column(nullable = false, index = true, definition = "VARCHAR (8000)")
     @Index
     protected String text;
 
     /**
      * Optional note to add to the quote.
      */
+    @Column(definition = "VARCHAR (2000)")
     protected String note;
 
     /**
@@ -39,11 +41,28 @@ public abstract class BaseQuote extends UserSpecificModel {
     @Lazy
     protected Set<Label> labels;
 
+    @Transient
+    protected String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /**
      * Updates title.
      * @param title The new title.
      */
     public abstract void setTitle(String title);
+
+    /**
+     * Gets the labels of this quote.
+     * @return The labels of this quote.
+     */
+    public abstract Set<Label> getLabels();
 
     /**
      * Updates text.
@@ -56,12 +75,6 @@ public abstract class BaseQuote extends UserSpecificModel {
      * @param note The new note.
      */
     public abstract void setNote(String note);
-
-    /**
-     * Gets the labels of this quote.
-     * @return The labels of this quote.
-     */
-    public abstract Set<Label> getLabels();
 
     @Override
     public void setUserOnSubfields(User user) {

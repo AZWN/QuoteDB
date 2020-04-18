@@ -9,5 +9,5 @@ import io.requery.Entity;
  */
 @Entity
 public abstract class AbstractQuickQuote extends BaseQuote {
-
+    // No additional fields
 }

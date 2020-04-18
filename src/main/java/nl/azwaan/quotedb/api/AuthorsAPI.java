@@ -6,6 +6,8 @@ import nl.azwaan.quotedb.api.filters.AuthorFilterBuilder;
 import nl.azwaan.quotedb.api.filters.BookFilterBuilder;
 import nl.azwaan.quotedb.api.filters.EqualityFilter;
 import nl.azwaan.quotedb.api.filters.FilterBuilder;
+import nl.azwaan.quotedb.api.paging.MultiResultPage;
+import nl.azwaan.quotedb.api.paging.PageHelpers;
 import nl.azwaan.quotedb.api.patches.AuthorPatch;
 import nl.azwaan.quotedb.dao.AuthorsDAO;
 import nl.azwaan.quotedb.dao.BooksDAO;
@@ -47,7 +49,8 @@ public class AuthorsAPI extends BaseAPI<Author, AuthorPatch> {
         final BookFilterBuilder filterBuilder = new BookFilterBuilder(booksDAO, getAuthenticatedUser(req), req);
         filterBuilder.addFilters(Collections.singletonList(new EqualityFilter<>(Book.AUTHOR_ID, id)));
 
-        return getPagedResult(req, booksDAO, booksPermissionChecker, filterBuilder);
+        return PageHelpers.getPagedResult(req, booksDAO, getAuthenticatedUser(req),
+                booksPermissionChecker, filterBuilder);
     }
 
     @Override

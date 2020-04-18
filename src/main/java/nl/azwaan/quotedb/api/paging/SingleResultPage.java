@@ -1,4 +1,4 @@
-package nl.azwaan.quotedb.api;
+package nl.azwaan.quotedb.api.paging;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 

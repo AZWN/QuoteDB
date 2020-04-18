@@ -10,6 +10,8 @@ import nl.azwaan.quotedb.exceptions.EntityNotFoundException;
 import nl.azwaan.quotedb.models.Label;
 import nl.azwaan.quotedb.models.User;
 
+import java.util.Date;
+
 /**
  * Class defining methods to access labels.
  *
@@ -45,6 +47,16 @@ public class LabelsDAO extends BaseDAO<Label> {
     @Override
     public QueryAttribute<Label, User> getUserAttribute() {
         return Label.USER;
+    }
+
+    @Override
+    public NumericAttribute<Label, Date> getLastModifiedDateProperty() {
+        return Label.LAST_MODIFIED_DATE;
+    }
+
+    @Override
+    public NumericAttribute<Label, Date> getGenerationDateProperty() {
+        return Label.GENERATION_DATE;
     }
 
     /**

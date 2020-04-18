@@ -9,6 +9,8 @@ import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.QuickQuote;
 import nl.azwaan.quotedb.models.User;
 
+import java.util.Date;
+
 /**
  * Object to access quotes from the database.
  *
@@ -45,5 +47,15 @@ public class QuotesDAO extends BaseQuotesDAO<QuickQuote> {
     @Override
     public QueryAttribute<QuickQuote, User> getUserAttribute() {
         return QuickQuote.USER;
+    }
+
+    @Override
+    public NumericAttribute<QuickQuote, Date> getLastModifiedDateProperty() {
+        return QuickQuote.LAST_MODIFIED_DATE;
+    }
+
+    @Override
+    public NumericAttribute<QuickQuote, Date> getGenerationDateProperty() {
+        return QuickQuote.GENERATION_DATE;
     }
 }

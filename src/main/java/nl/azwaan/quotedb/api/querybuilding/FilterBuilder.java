@@ -1,4 +1,4 @@
-package nl.azwaan.quotedb.api.filters;
+package nl.azwaan.quotedb.api.querybuilding;
 
 import io.requery.query.Return;
 import io.requery.query.Selection;

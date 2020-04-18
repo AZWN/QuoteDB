@@ -1,5 +1,6 @@
-package nl.azwaan.quotedb.api.filters;
+package nl.azwaan.quotedb.api.querybuilding;
 
+import nl.azwaan.quotedb.api.querybuilding.filters.Filter;
 import nl.azwaan.quotedb.dao.BaseDAO;
 import nl.azwaan.quotedb.models.Label;
 import nl.azwaan.quotedb.models.User;

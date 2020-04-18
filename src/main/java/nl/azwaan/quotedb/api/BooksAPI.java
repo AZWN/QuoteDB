@@ -2,10 +2,10 @@ package nl.azwaan.quotedb.api;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.azwaan.quotedb.api.filters.BookFilterBuilder;
-import nl.azwaan.quotedb.api.filters.BookQuoteFilterBuilder;
-import nl.azwaan.quotedb.api.filters.EqualityFilter;
-import nl.azwaan.quotedb.api.filters.FilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.BookFilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.BookQuoteFilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.filters.EqualityFilter;
+import nl.azwaan.quotedb.api.querybuilding.FilterBuilder;
 import nl.azwaan.quotedb.api.paging.MultiResultPage;
 import nl.azwaan.quotedb.api.paging.PageHelpers;
 import nl.azwaan.quotedb.api.patches.BookPatch;

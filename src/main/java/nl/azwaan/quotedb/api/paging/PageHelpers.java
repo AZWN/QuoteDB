@@ -1,7 +1,7 @@
 package nl.azwaan.quotedb.api.paging;
 
 import io.requery.Persistable;
-import nl.azwaan.quotedb.api.filters.FilterBuilder;
+import nl.azwaan.quotedb.api.querybuilding.FilterBuilder;
 import nl.azwaan.quotedb.dao.BaseDAO;
 import nl.azwaan.quotedb.models.User;
 import nl.azwaan.quotedb.models.UserSpecificModel;

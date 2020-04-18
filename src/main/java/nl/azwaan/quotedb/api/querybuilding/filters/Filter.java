@@ -1,4 +1,4 @@
-package nl.azwaan.quotedb.api.filters;
+package nl.azwaan.quotedb.api.querybuilding.filters;
 
 import io.requery.query.WhereAndOr;
 

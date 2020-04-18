@@ -1,14 +1,20 @@
-package nl.azwaan.quotedb.api.filters;
+package nl.azwaan.quotedb.api.querybuilding;
 
 import io.requery.Persistable;
 import io.requery.meta.StringAttribute;
 import io.requery.query.Expression;
 import io.requery.query.Limit;
 import io.requery.query.LogicalCondition;
+import io.requery.query.OrderingExpression;
 import io.requery.query.Return;
 import io.requery.query.Selection;
 import io.requery.query.WhereAndOr;
 import nl.azwaan.quotedb.Constants;
+import nl.azwaan.quotedb.api.querybuilding.filters.EqualityFilter;
+import nl.azwaan.quotedb.api.querybuilding.filters.Filter;
+import nl.azwaan.quotedb.api.querybuilding.filters.StringLikeFilter;
+import nl.azwaan.quotedb.api.querybuilding.sorting.AscSorting;
+import nl.azwaan.quotedb.api.querybuilding.sorting.Sorting;
 import nl.azwaan.quotedb.dao.BaseDAO;
 import nl.azwaan.quotedb.models.User;
 import nl.azwaan.quotedb.models.UserSpecificModel;
@@ -26,10 +32,11 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
     private final int resultSetSize;
     private final int offset;
     private BaseDAO<T> dao;
-    private User authenticatedUser;
 
-    private LogicalCondition<? extends Expression<Long>, ?> initialFilter;
+    private LogicalCondition<? extends Expression<User>, ?> initialFilter;
     private List<Filter> filters;
+
+    private List<Sorting> sortings;
 
     /**
      * Constructs a new basic filter builder.
@@ -40,7 +47,6 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
      */
     public BaseFilterBuilder(BaseDAO<T> dao, User authenticatedUser, Request request) {
         this.dao = dao;
-        this.authenticatedUser = authenticatedUser;
         resultSetSize = request.param("pageSize").intValue(Constants.MAX_PAGE_SIZE);
         offset = (request.param("page").intValue(1) - 1) * resultSetSize;
 
@@ -52,14 +58,20 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
             throw new IllegalArgumentException("pageNumber must be 1 or more");
         }
 
-        initialFilter = dao.getIDProperty().greaterThanOrEqual(-1L);
+        initialFilter = dao.getUserAttribute().eq(authenticatedUser);
         filters = getFilters(request);
+
+        sortings = getSortings();
+    }
+
+    protected List<Sorting> getSortings() {
+        final List<Sorting> result = new ArrayList<>();
+        result.add(new AscSorting(dao.getIDProperty()));
+        return result;
     }
 
     protected List<Filter> getFilters(Request request) {
         final List<Filter> result = new ArrayList<>();
-
-        result.add(new EqualityFilter<>(dao.getUserAttribute(), authenticatedUser));
 
         // Find out whether to include deleted properties
         final Mutant includeDeletedProp = request.param("includeDeleted");
@@ -109,7 +121,9 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
     }
 
     protected <R> Limit<R> preFinalize(WhereAndOr<R> filteredQuery) {
-        return filteredQuery;
+        final OrderingExpression[] sortingExpressions = sortings.stream()
+                .map(Sorting::create).toArray(OrderingExpression[]::new);
+        return filteredQuery.orderBy(sortingExpressions);
     }
 
     protected void mapStringLikeFilter(Request request, List<Filter> filters, String paramName,

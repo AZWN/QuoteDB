@@ -6,8 +6,11 @@ import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
 import io.requery.meta.QueryAttribute;
+import nl.azwaan.quotedb.models.Author;
 import nl.azwaan.quotedb.models.BookQuote;
 import nl.azwaan.quotedb.models.User;
+
+import java.util.Date;
 
 /**
  * Classed used for data operations on {@link BookQuote}s.
@@ -44,5 +47,15 @@ public class BookQuotesDAO extends BaseQuotesDAO<BookQuote> {
     @Override
     public QueryAttribute<BookQuote, User> getUserAttribute() {
         return BookQuote.USER;
+    }
+
+    @Override
+    public NumericAttribute<BookQuote, Date> getLastModifiedDateProperty() {
+        return BookQuote.LAST_MODIFIED_DATE;
+    }
+
+    @Override
+    public NumericAttribute<BookQuote, Date> getGenerationDateProperty() {
+        return BookQuote.GENERATION_DATE;
     }
 }

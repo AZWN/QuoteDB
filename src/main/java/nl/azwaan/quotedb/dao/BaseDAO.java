@@ -4,12 +4,14 @@ import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
 import io.requery.meta.QueryAttribute;
+import io.requery.query.Functional;
 import io.requery.query.Result;
 import io.requery.query.Scalar;
 import io.requery.query.Selection;
 import io.requery.query.Update;
 import nl.azwaan.quotedb.models.User;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -141,4 +143,16 @@ public abstract class BaseDAO<T extends Persistable> {
     public T updateEntity(T entity) {
         return store.update(entity);
     }
+
+    /**
+     * Returns the property when entity is modified last.
+     * @return The LastModifiedDate attribute
+     */
+    public abstract NumericAttribute<T, Date> getLastModifiedDateProperty();
+
+    /**
+     * Returns the property when entity is created.
+     * @return The GenerationDate attribute
+     */
+    public abstract NumericAttribute<T, Date> getGenerationDateProperty();
 }

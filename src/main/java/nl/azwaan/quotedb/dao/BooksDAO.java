@@ -9,6 +9,8 @@ import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.Book;
 import nl.azwaan.quotedb.models.User;
 
+import java.util.Date;
+
 @Singleton
 public class BooksDAO extends BaseDAO<Book> {
 
@@ -39,6 +41,16 @@ public class BooksDAO extends BaseDAO<Book> {
     @Override
     public QueryAttribute<Book, User> getUserAttribute() {
         return Book.USER;
+    }
+
+    @Override
+    public NumericAttribute<Book, Date> getLastModifiedDateProperty() {
+        return Book.LAST_MODIFIED_DATE;
+    }
+
+    @Override
+    public NumericAttribute<Book, Date> getGenerationDateProperty() {
+        return Book.GENERATION_DATE;
     }
 
 }

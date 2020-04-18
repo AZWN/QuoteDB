@@ -8,6 +8,8 @@ import io.requery.meta.QueryAttribute;
 import nl.azwaan.quotedb.models.Author;
 import nl.azwaan.quotedb.models.User;
 
+import java.util.Date;
+
 public class AuthorsDAO extends BaseDAO<Author> {
     /**
      * Constructs a {@link AuthorsDAO}.
@@ -37,5 +39,15 @@ public class AuthorsDAO extends BaseDAO<Author> {
     @Override
     public QueryAttribute<Author, User> getUserAttribute() {
         return Author.USER;
+    }
+
+    @Override
+    public NumericAttribute<Author, Date> getLastModifiedDateProperty() {
+        return Author.LAST_MODIFIED_DATE;
+    }
+
+    @Override
+    public NumericAttribute<Author, Date> getGenerationDateProperty() {
+        return Author.GENERATION_DATE;
     }
 }

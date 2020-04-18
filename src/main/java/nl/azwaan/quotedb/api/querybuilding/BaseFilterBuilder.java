@@ -3,6 +3,7 @@ package nl.azwaan.quotedb.api.querybuilding;
 import io.requery.Persistable;
 import io.requery.meta.StringAttribute;
 import io.requery.query.Expression;
+import io.requery.query.Functional;
 import io.requery.query.Limit;
 import io.requery.query.LogicalCondition;
 import io.requery.query.OrderingExpression;
@@ -14,8 +15,10 @@ import nl.azwaan.quotedb.api.querybuilding.filters.EqualityFilter;
 import nl.azwaan.quotedb.api.querybuilding.filters.Filter;
 import nl.azwaan.quotedb.api.querybuilding.filters.StringLikeFilter;
 import nl.azwaan.quotedb.api.querybuilding.sorting.AscSorting;
+import nl.azwaan.quotedb.api.querybuilding.sorting.DescSorting;
 import nl.azwaan.quotedb.api.querybuilding.sorting.Sorting;
 import nl.azwaan.quotedb.dao.BaseDAO;
+import nl.azwaan.quotedb.exceptions.InvalidSortingSpecificationException;
 import nl.azwaan.quotedb.models.User;
 import nl.azwaan.quotedb.models.UserSpecificModel;
 import org.jooby.Mutant;
@@ -61,12 +64,15 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
         initialFilter = dao.getUserAttribute().eq(authenticatedUser);
         filters = getFilters(request);
 
-        sortings = getSortings();
+        sortings = getSortings(request);
     }
 
-    protected List<Sorting> getSortings() {
+    protected List<Sorting> getSortings(Request request) {
         final List<Sorting> result = new ArrayList<>();
-        result.add(new AscSorting(dao.getIDProperty()));
+        mapSorting(request, result, "last_modified_date", dao.getLastModifiedDateProperty());
+        mapSorting(request, result, "generation_date", dao.getGenerationDateProperty());
+        mapSorting(request, result, "id", dao.getIDProperty());
+
         return result;
     }
 
@@ -130,6 +136,27 @@ public class BaseFilterBuilder<T extends UserSpecificModel & Persistable> implem
                                        StringAttribute<T, String> attribute)
     {
         request.param(paramName).toOptional().ifPresent(value -> filters.add(new StringLikeFilter<>(attribute, value)));
+    }
+
+    protected void mapSorting(Request request, List<Sorting> sortings, String attributeName, Functional<?> attribute) {
+
+        request.param("order_by").toList().stream()
+                .filter(x -> x.startsWith(attributeName))
+                .findFirst()
+                .ifPresent(value -> {
+                    if (value.equals(String.format("%s.desc", attributeName))) {
+                        sortings.add(new DescSorting(attribute));
+                    }
+                    else if (value.equals(String.format("%s.asc", attributeName))) {
+                        sortings.add(new AscSorting(attribute));
+                    }
+                    else if (value.equals(attributeName)) {
+                        sortings.add(new AscSorting(attribute));
+                    }
+                    else {
+                        throw new InvalidSortingSpecificationException(value);
+                    }
+                });
     }
 
     /**

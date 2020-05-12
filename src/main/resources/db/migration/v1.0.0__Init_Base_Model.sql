@@ -47,7 +47,7 @@ CREATE TABLE Author (
     dateOfBirth date NOT NULL,
     firstName varchar(255) NOT NULL,
     initials varchar(255) NOT NULL,
-    middleName varchar(255) NOT NULL,
+    middleName varchar(255),
     lastName varchar(255) NOT NULL,
     -- Metadata
     generationDate DATE NOT NULL,

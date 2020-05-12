@@ -22,7 +22,7 @@ public abstract class BaseQuotesDAO<TQuote extends BaseQuote & Persistable> exte
     public TQuote upsertEntity(TQuote quote) {
         final Set<Label> labels = quote.getLabels();
         final TQuote upsertedQuote = super.upsertEntity(quote);
-        // Add labels after upserting, since requery bug. TODO: report bug
+        // Add labels after upserting, since requery bug.
         upsertedQuote.getLabels().clear();
         upsertedQuote.getLabels().addAll(labels);
         return updateEntity(upsertedQuote);

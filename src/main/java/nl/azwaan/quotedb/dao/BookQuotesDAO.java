@@ -6,7 +6,6 @@ import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
 import io.requery.meta.QueryAttribute;
-import nl.azwaan.quotedb.models.Author;
 import nl.azwaan.quotedb.models.BookQuote;
 import nl.azwaan.quotedb.models.User;
 

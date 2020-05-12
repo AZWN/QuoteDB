@@ -10,11 +10,10 @@ import nl.azwaan.quotedb.users.TokenUserIDProvider;
 import nl.azwaan.quotedb.users.UserIDProvider;
 
 import org.jooby.Jooby;
-import org.jooby.Results;
 import org.jooby.flyway.Flywaydb;
+import org.jooby.frontend.Npm;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
-import org.jooby.pebble.Pebble;
 import org.jooby.requery.Requery;
 
 import java.text.SimpleDateFormat;
@@ -42,10 +41,12 @@ public class QuoteDBApp extends Jooby {
                 .doWith(s -> s.setTransactionMode(TransactionMode.NONE)));
 
         // React frontend setup
-        // use(new Assets());
+        on("dev", () -> {
+            use(new Npm("v10.16.0"));
+        });
 
-        use(new Pebble());
-        get("/", () -> Results.html("index"));
+        assets("/dist/**", "/dist/{0}");
+        assets("/", "dist/index.html");
 
         on("dev", () -> {
             bind(UserIDProvider.class, DevUserIDProvider.class);

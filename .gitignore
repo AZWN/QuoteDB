@@ -21,4 +21,10 @@ bin
 pom.xml.versionsBackup
 jacoco.exec
 local_dev.db
+local_dev.mv.db
 curl/
+
+# Ignore node stuff
+node/
+node_modules/
+public/dist

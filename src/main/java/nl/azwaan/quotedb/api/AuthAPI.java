@@ -48,6 +48,8 @@ public class AuthAPI {
      *
      * @param creds The credentials for which a User should be created
      * @return {link Result} with CREATED if the user could be created.
+     *
+     * @throws InvalidRequestException When no username or password is provided
      */
     @Path("/register")
     @POST

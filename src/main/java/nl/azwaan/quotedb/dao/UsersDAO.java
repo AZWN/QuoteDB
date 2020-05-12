@@ -34,6 +34,8 @@ public class UsersDAO {
      * @param userName The username of the new user, may not exist yet
      * @param password The password of the new User
      * @return The new User object
+     *
+     * @throws ResourceConflictException When the username is already taken
      */
     public User insertUser(String userName, String password) {
         if (userNameExists(userName)) {

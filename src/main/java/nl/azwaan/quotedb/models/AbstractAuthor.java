@@ -21,7 +21,7 @@ public abstract class AbstractAuthor extends UserSpecificModel {
     @Index
     protected String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, value = "''")
     protected String middleName;
 
     @Column(nullable = false)

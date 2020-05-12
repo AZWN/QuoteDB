@@ -4,7 +4,6 @@ import io.requery.EntityStore;
 import io.requery.Persistable;
 import io.requery.meta.NumericAttribute;
 import io.requery.meta.QueryAttribute;
-import io.requery.query.Functional;
 import io.requery.query.Result;
 import io.requery.query.Scalar;
 import io.requery.query.Selection;

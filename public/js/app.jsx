@@ -5,12 +5,13 @@ import '../css/quotedb.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 
-import { Header } from './ui/header/Header'
-
+import PropTypes from 'prop-types';
 import auth from './api/auth';
+
+import Header from './ui/header/Header'
 import RegisterForm from "./ui/auth/RegisterForm";
 import LoginForm from './ui/auth/LoginForm';
 
@@ -49,6 +50,9 @@ export class QuoteDBAppFrame extends React.Component {
                                     </Col>
                                 </Row>
                             </Route>
+                            <Route path="/">
+                                <RedirectHome loggedIn={this.state.loggedIn}/>
+                            </Route>
                         </Switch>
                     </Container>
                 </Router>
@@ -56,6 +60,23 @@ export class QuoteDBAppFrame extends React.Component {
         );
     }
 }
+
+class RedirectHome extends React.Component {
+    constructor(props) {
+        super(props);
+        this.loggedIn = props.loggedIn;
+    }
+    render() {
+        if (this.loggedIn) {
+            return (<Redirect to="/dashboard"/>);
+        }
+        return (<Redirect to="/login"/>);
+    }
+}
+
+RedirectHome.propTypes = {
+    isLoggedIn: PropTypes.bool
+};
 
 ReactDOM.render(
     <QuoteDBAppFrame />,

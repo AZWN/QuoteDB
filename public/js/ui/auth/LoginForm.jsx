@@ -27,11 +27,10 @@ class RegisterForm extends React.Component {
             // Try to actually login
             const userName = $('#userName')[0].value;
             const password = $('#password')[0].value;
-            const self = this;
             auth.login(userName, password)
                 .done(() => {
                     this.onLogin();
-                    self.props.history.push('/')
+                    this.props.history.push('/dashboard')
                 })
                 .fail(req => {
                     const passwordError = req.status === 401 ? 'Username/password combination invalid' : 'Unexpected error when logging in';

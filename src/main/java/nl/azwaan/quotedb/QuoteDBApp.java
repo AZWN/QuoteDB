@@ -45,9 +45,6 @@ public class QuoteDBApp extends Jooby {
             use(new Npm("v10.16.0"));
         });
 
-        assets("/dist/**", "/dist/{0}");
-        assets("/", "dist/index.html");
-
         on("dev-no-auth", () -> {
             bind(UserIDProvider.class, DevUserIDProvider.class);
         }).orElse(() -> {
@@ -59,6 +56,9 @@ public class QuoteDBApp extends Jooby {
         use(new PermissionsModule());
 
         use(new RestAPIModule());
+
+        assets("/dist/**", "/dist/{0}");
+        assets("/**", "dist/index.html");
     }
 
     /**

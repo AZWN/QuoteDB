@@ -16,19 +16,28 @@ const storeToken = token => {
     localStorage.setItem(tokenStorageKey, token);
 };
 
-const login = (userName, password, success, fail) => {
-    $.post('/auth/login', { userName, password })
-        .then(res => {
-            debugger;
-            storeToken(res);
-            success(res);
-        }, fail);
+const buildRequest = (data, method) => {
+    return {
+        method,
+        data: JSON.stringify(data),
+        contentType: 'application/json'
+    };
 };
 
-const register = (userName, password) => $.post('auth/register', { userName, password });
+const login = (userName, password) => {
+    return $.ajax('/auth/login', buildRequest({userName, password}, "POST"))
+        .then(({ token }) => storeToken(token));
+};
+
+const logout = () => {
+    localStorage.removeItem(tokenStorageKey);
+};
+
+const register = (userName, password) => $.ajax('auth/register', buildRequest({ userName, password }, "POST"));
 
 export default {
     isLoggedIn,
     login,
-    register
+    register,
+    logout
 }

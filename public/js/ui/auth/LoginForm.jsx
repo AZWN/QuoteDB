@@ -1,5 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { Button, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import $ from 'jquery';
@@ -61,5 +62,9 @@ class RegisterForm extends React.Component {
         );
     }
 }
+
+RegisterForm.propTypes = {
+    onLogin: PropTypes.func.isRequired
+};
 
 export default withRouter(RegisterForm);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar, NavbarBrand, Container, NavItem, Nav } from 'reactstrap';
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 import auth from "../../api/auth";
 import Collapse from "reactstrap/lib/Collapse";
@@ -39,3 +40,7 @@ export class Header extends React.Component {
         )
     }
 }
+
+Header.propTypes = {
+    onLogout: PropTypes.func.isRequired
+};

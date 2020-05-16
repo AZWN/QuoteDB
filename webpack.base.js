@@ -10,7 +10,7 @@ const distDir = publicDir('dist');
 module.exports = {
     context: publicDir(),
     entry: {
-        index: publicDir('index.js')
+        index: publicDir('js/app.jsx')
     },
     devtool: 'source-map',
     output: {
@@ -30,6 +30,15 @@ module.exports = {
         rules: [{
             test: /\.css$/,
             use: ['style-loader', 'css-loader']
+        }, {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            use: {
+                loader: "babel-loader"
+            }
         }]
+    },
+    resolve: {
+        extensions: [".js", ".jsx"]
     }
 };

@@ -16,7 +16,8 @@ class RegisterForm extends React.Component {
         const val = elem.value;
         return !!val;
     }
-    submitForm() {
+    submitForm(event) {
+        event.preventDefault();
         const hasUserName = this.fieldPresent('#userName');
         const hasPassword = this.fieldPresent('#password');
         const passwordError = !hasPassword ? 'Please fill in your password!' : undefined;
@@ -43,7 +44,7 @@ class RegisterForm extends React.Component {
     }
     render() {
         return (
-            <Form className="auth-form" noValidate>
+            <Form className="auth-form" noValidate onSubmit={e => this.submitForm(e)}>
                 <h4>Login</h4>
                 <FormGroup>
                     <Label for="userName">Username</Label>
@@ -57,7 +58,7 @@ class RegisterForm extends React.Component {
                            valid={this.state.hasPassword} invalid={this.propertyInvalid('hasPassword')}/>
                     <FormFeedback valid={false}>{this.state.passwordError}</FormFeedback>
                 </FormGroup>
-                <Button onClick={() => this.submitForm()}>Login</Button>
+                <Button type="submit" color="primary">Login</Button>
             </Form>
         );
     }

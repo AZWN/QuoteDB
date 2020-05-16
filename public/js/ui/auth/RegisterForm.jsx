@@ -14,7 +14,8 @@ class RegisterForm extends React.Component {
         const val = elem.value;
         return !!val;
     }
-    submitForm() {
+    submitForm(event) {
+        event.preventDefault();
         const hasUserName = this.fieldPresent('#userName');
         const userNameError = hasUserName ? 'Please enter a username!' : undefined;
         const hasPassword = this.fieldPresent('#password');
@@ -36,7 +37,7 @@ class RegisterForm extends React.Component {
     }
     render() {
         return (
-            <Form className="auth-form" noValidate>
+            <Form className="auth-form" noValidate onSubmit={e => this.submitForm(e)}>
                 <h4>Register</h4>
                 <FormGroup>
                     <Label for="userName">Username</Label>
@@ -56,7 +57,7 @@ class RegisterForm extends React.Component {
                            valid={this.state.repeatPasswordValid} invalid={this.propertyInvalid('repeatPasswordValid')}/>
                     <FormFeedback valid={false}>Passwords do not match!</FormFeedback>
                 </FormGroup>
-                <Button onClick={() => this.submitForm()}>Register</Button>
+                <Button type="submit" color="primary">Register</Button>
             </Form>
         );
     }

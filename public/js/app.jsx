@@ -5,17 +5,53 @@ import '../css/quotedb.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Container, Row, Col } from "reactstrap";
 
-import { Header } from './ui/header/header'
+import { Header } from './ui/header/Header'
 
 import auth from './api/auth';
+import RegisterForm from "./ui/auth/RegisterForm";
+import LoginForm from './ui/auth/LoginForm';
+
 window.auth = auth;
 
 export class QuoteDBAppFrame extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            loggedIn: auth.isLoggedIn()
+        }
+    }
+    updateLoggedIn() {
+        this.setState( {
+            loggedIn: auth.isLoggedIn()
+        })
+    }
     render() {
         return (
             <div className="test quotedb-app-frame">
-                <Header />
+                <Router>
+                    <Header onLogout={() => this.updateLoggedIn()}/>
+                    <Container className="quotedb-container">
+                        <Switch>
+                            <Route path="/register">
+                                <Row>
+                                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
+                                        <RegisterForm />
+                                    </Col>
+                                </Row>
+                            </Route>
+                            <Route path="/login">
+                                <Row>
+                                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
+                                        <LoginForm onLogin={() => this.updateLoggedIn()}/>
+                                    </Col>
+                                </Row>
+                            </Route>
+                        </Switch>
+                    </Container>
+                </Router>
             </div>
         );
     }

@@ -41,14 +41,14 @@ public class QuoteDBApp extends Jooby {
                 .doWith(s -> s.setTransactionMode(TransactionMode.NONE)));
 
         // React frontend setup
-        on("dev", () -> {
+        on("dev", "dev-no-auth", "", () -> {
             use(new Npm("v10.16.0"));
         });
 
         assets("/dist/**", "/dist/{0}");
         assets("/", "dist/index.html");
 
-        on("dev", () -> {
+        on("dev-no-auth", () -> {
             bind(UserIDProvider.class, DevUserIDProvider.class);
         }).orElse(() -> {
             use(new AuthModule());

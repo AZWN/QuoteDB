@@ -4,7 +4,19 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = merge(base, {
     plugins: [
-        new UglifyJSPlugin()
+        new UglifyJSPlugin({
+            uglifyOptions: {
+                ecma: 7,
+                ie8: false,
+                output: {
+                    comments: false
+                },
+                cache: true,
+                parallel: true,
+                sourceMap: false,
+                keep_fnames: true
+            }
+        })
     ],
     module: {
         rules: [{

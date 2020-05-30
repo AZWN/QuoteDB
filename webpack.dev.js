@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const base = require('./webpack.base.js');
 
-const resultConf = merge(base, {
+module.exports = merge(base, {
     plugins: [
         new webpack.HotModuleReplacementPlugin()
     ],
@@ -37,6 +37,7 @@ const resultConf = merge(base, {
             }
         }
     },
+    devtool: 'source-map',
     module: {
         rules: [{
             enforce: 'pre',
@@ -46,13 +47,9 @@ const resultConf = merge(base, {
             options: {
                 cache: true,
                 fix: true,
-                emitWarnings: true,
+                emitWarning: true,
                 formatter: require('eslint-friendly-formatter')
             }
         }]
     }
 });
-
-console.log(resultConf.module.rules);
-
-module.exports = resultConf;

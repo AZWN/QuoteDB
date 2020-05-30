@@ -1,10 +1,9 @@
 import React from 'react';
-import { Navbar, NavbarBrand, Container, NavItem, Nav, NavbarToggler } from 'reactstrap';
+import { Navbar, NavbarBrand, Container, NavItem, Nav, NavbarToggler, Collapse } from 'reactstrap';
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from 'prop-types';
 
 import { logout, isLoggedIn } from "../../api/auth";
-import Collapse from "reactstrap/lib/Collapse";
 
 class Header extends React.Component {
     constructor(props) {

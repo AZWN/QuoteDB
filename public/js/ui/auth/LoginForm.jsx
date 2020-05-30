@@ -1,9 +1,11 @@
-import React from 'react'
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { Button, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import $ from 'jquery';
+
+import { login } from '../../api/auth';
 
 class RegisterForm extends React.Component {
     constructor(props) {
@@ -17,7 +19,6 @@ class RegisterForm extends React.Component {
         return !!val;
     }
     submitForm(event) {
-        debugger;
         event.preventDefault();
         const hasUserName = this.fieldPresent('#userName');
         const hasPassword = this.fieldPresent('#password');
@@ -28,14 +29,14 @@ class RegisterForm extends React.Component {
             // Try to actually login
             const userName = $('#userName')[0].value;
             const password = $('#password')[0].value;
-            auth.login(userName, password)
+            login(userName, password)
                 .done(() => {
                     this.onLogin();
-                    this.props.history.push('/dashboard')
+                    this.props.history.push('/dashboard');
                 })
                 .fail(req => {
                     const passwordError = req.status === 401 ? 'Username/password combination invalid' : 'Unexpected error when logging in';
-                    this.setState({ passwordError, hasPassword: false })
+                    this.setState({ passwordError, hasPassword: false });
                 });
         }
     }
@@ -49,13 +50,13 @@ class RegisterForm extends React.Component {
                 <FormGroup>
                     <Label for="userName">Username</Label>
                     <Input type="userName" name="userName" id="userName" placeholder="Username"
-                           valid={this.state.hasUserName} invalid={this.propertyInvalid('hasUserName')}/>
+                        valid={this.state.hasUserName} invalid={this.propertyInvalid('hasUserName')}/>
                     <FormFeedback valid={false}>Please enter a username!</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                     <Label for="password">Password</Label>
                     <Input type="password" name="password" id="password" placeholder="Password"
-                           valid={this.state.hasPassword} invalid={this.propertyInvalid('hasPassword')}/>
+                        valid={this.state.hasPassword} invalid={this.propertyInvalid('hasPassword')}/>
                     <FormFeedback valid={false}>{this.state.passwordError}</FormFeedback>
                 </FormGroup>
                 <Button type="submit" color="primary">Login</Button>
@@ -65,7 +66,10 @@ class RegisterForm extends React.Component {
 }
 
 RegisterForm.propTypes = {
-    onLogin: PropTypes.func.isRequired
+    onLogin: PropTypes.func.isRequired,
+    history: PropTypes.objectOf({
+        push: PropTypes.func.isRequired
+    }).isRequired
 };
 
 export default withRouter(RegisterForm);

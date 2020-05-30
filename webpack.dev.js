@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const base = require('./webpack.base.js');
 
-module.exports = merge(base, {
+const resultConf = merge(base, {
     plugins: [
         new webpack.HotModuleReplacementPlugin()
     ],
@@ -36,5 +36,22 @@ module.exports = merge(base, {
                 }
             }
         }
+    },
+    module: {
+        rules: [{
+            enforce: 'pre',
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: 'eslint-loader',
+            options: {
+                cache: true,
+                fix: true,
+                emitWarnings: true
+            }
+        }]
     }
 });
+
+console.log(resultConf.module.rules);
+
+module.exports = resultConf;

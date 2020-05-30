@@ -1,33 +1,31 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.min'
-import 'startbootstrap-freelancer/dist/css/styles.css'
-import '../css/quotedb.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min';
+import 'startbootstrap-freelancer/dist/css/styles.css';
+import '../css/quotedb.css';
 
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 
 import PropTypes from 'prop-types';
-import auth from './api/auth';
+import { isLoggedIn } from './api/auth';
 
-import Header from './ui/header/Header'
+import Header from './ui/header/Header';
 import RegisterForm from "./ui/auth/RegisterForm";
 import LoginForm from './ui/auth/LoginForm';
 
-window.auth = auth;
-
 export class QuoteDBAppFrame extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            loggedIn: auth.isLoggedIn()
-        }
+            loggedIn: isLoggedIn()
+        };
     }
     updateLoggedIn() {
         this.setState( {
-            loggedIn: auth.isLoggedIn()
-        })
+            loggedIn: isLoggedIn()
+        });
     }
     render() {
         return (
@@ -75,10 +73,10 @@ class RedirectHome extends React.Component {
 }
 
 RedirectHome.propTypes = {
-    isLoggedIn: PropTypes.bool
+    loggedIn: PropTypes.bool
 };
 
 ReactDOM.render(
     <QuoteDBAppFrame />,
     document.getElementById('react-root')
-)
+);

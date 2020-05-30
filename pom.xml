@@ -166,7 +166,7 @@
     </dependencies>
 
     <build>
-        <finalName>webpack/</finalName>
+        <finalName>webpack</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -228,16 +228,12 @@
                     </includes>
                 </configuration>
             </plugin>
+            <!-- static analysis -->
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
-                <!--configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                </configuration-->
             </plugin>
-            <!-- static analysis -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

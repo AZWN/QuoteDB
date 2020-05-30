@@ -10,7 +10,7 @@ const distDir = publicDir('dist');
 module.exports = {
     context: publicDir(),
     entry: {
-        index: publicDir('js/app.jsx')
+        index: publicDir('js/App.jsx')
     },
     devtool: 'source-map',
     output: {

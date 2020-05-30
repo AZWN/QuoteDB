@@ -46,7 +46,8 @@ const resultConf = merge(base, {
             options: {
                 cache: true,
                 fix: true,
-                emitWarnings: true
+                emitWarnings: true,
+                formatter: require('eslint-friendly-formatter')
             }
         }]
     }

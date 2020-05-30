@@ -5,6 +5,7 @@ import { Button, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap"
 import $ from 'jquery';
 
 import { register } from "../../api/auth";
+import PropTypes from 'prop-types';
 
 class RegisterForm extends React.Component {
     constructor(props) {
@@ -64,5 +65,9 @@ class RegisterForm extends React.Component {
         );
     }
 }
+
+RegisterForm.propTypes = {
+    history: PropTypes.object
+};
 
 export default withRouter(RegisterForm);

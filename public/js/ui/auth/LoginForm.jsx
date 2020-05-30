@@ -7,7 +7,7 @@ import $ from 'jquery';
 
 import { login } from '../../api/auth';
 
-class RegisterForm extends React.Component {
+class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -65,11 +65,11 @@ class RegisterForm extends React.Component {
     }
 }
 
-RegisterForm.propTypes = {
+LoginForm.propTypes = {
     onLogin: PropTypes.func.isRequired,
-    history: PropTypes.objectOf({
+    history: PropTypes.shape({
         push: PropTypes.func.isRequired
     }).isRequired
 };
 
-export default withRouter(RegisterForm);
+export default withRouter(LoginForm);

@@ -24,7 +24,7 @@ const buildRequest = (data, method) => {
 };
 
 export const login = (userName, password) => {
-    import('jquery')
+    return import('jquery')
         .then($ => $.ajax('/auth/login', buildRequest({userName, password}, "POST")))
         .then(({ token }) => storeToken(token));
 };
@@ -33,6 +33,8 @@ export const logout = () => {
     localStorage.removeItem(tokenStorageKey);
 };
 
-export const register = (userName, password) => import('jquery')
-    .then($ => $.ajax('auth/register', buildRequest({ userName, password }, "POST")));
+export const register = (userName, password) => {
+    return import('jquery')
+        .then($ => $.ajax('auth/register', buildRequest({userName, password}, "POST")));
+};
 

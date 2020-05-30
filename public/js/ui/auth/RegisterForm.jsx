@@ -31,8 +31,8 @@ class RegisterForm extends React.Component {
             const password = $('#password')[0].value;
             const self = this;
             register(userName, password)
-                .done(() => self.props.history.push('/login'))
-                .fail(req => this.setState({ userNameError: req.responseJSON.message, hasUserName: false }));
+                .then(() => self.props.history.push('/login'),
+                    req => this.setState({ userNameError: req.responseJSON.message, hasUserName: false }));
         }
     }
     propertyInvalid(prop) {

@@ -6,4 +6,4 @@ cache:
   - $HOME/.m2
   - node
 script:
-  - mvn clean verify jacoco:report coveralls:report -e
+  - mvn clean verify jacoco:report coveralls:report

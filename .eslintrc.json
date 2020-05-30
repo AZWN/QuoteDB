@@ -17,6 +17,7 @@
   ],
   "rules": {
     "semi": "error",
+    "eol-last": "error",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "import/no-extraneous-dependencies": "off",

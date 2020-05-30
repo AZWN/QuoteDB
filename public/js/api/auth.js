@@ -5,7 +5,7 @@ const tokenStorageKey = 'token';
 
 export const isLoggedIn = () => {
     const token = localStorage.getItem(tokenStorageKey);
-    if (token == null) {
+    if (!token) {
         return false;
     }
     const { exp } = decode(token);

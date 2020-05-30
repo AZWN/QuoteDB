@@ -1,9 +1,9 @@
-import $ from 'jquery'
-import { decode } from 'jsonwebtoken'
+import $ from 'jquery';
+import { decode } from 'jsonwebtoken';
 
 const tokenStorageKey = 'token';
 
-const isLoggedIn = () => {
+export const isLoggedIn = () => {
     const token = localStorage.getItem(tokenStorageKey);
     if (token == null) {
         return false;
@@ -24,20 +24,14 @@ const buildRequest = (data, method) => {
     };
 };
 
-const login = (userName, password) => {
+export const login = (userName, password) => {
     return $.ajax('/auth/login', buildRequest({userName, password}, "POST"))
         .then(({ token }) => storeToken(token));
 };
 
-const logout = () => {
+export const logout = () => {
     localStorage.removeItem(tokenStorageKey);
 };
 
-const register = (userName, password) => $.ajax('auth/register', buildRequest({ userName, password }, "POST"));
+export const register = (userName, password) => $.ajax('auth/register', buildRequest({ userName, password }, "POST"));
 
-export default {
-    isLoggedIn,
-    login,
-    register,
-    logout
-}

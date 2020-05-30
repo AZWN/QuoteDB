@@ -1,8 +1,10 @@
-import React from 'react'
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import { Button, Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import $ from 'jquery';
+
+import { register } from "../../api/auth";
 
 class RegisterForm extends React.Component {
     constructor(props) {
@@ -27,7 +29,7 @@ class RegisterForm extends React.Component {
             const userName = $('#userName')[0].value;
             const password = $('#password')[0].value;
             const self = this;
-            auth.register(userName, password)
+            register(userName, password)
                 .done(() => self.props.history.push('/login'))
                 .fail(req => this.setState({ userNameError: req.responseJSON.message, hasUserName: false }));
         }
@@ -42,19 +44,19 @@ class RegisterForm extends React.Component {
                 <FormGroup>
                     <Label for="userName">Username</Label>
                     <Input type="userName" name="userName" id="userName" placeholder="Username"
-                           valid={this.state.hasUserName} invalid={this.propertyInvalid('hasUserName')}/>
+                        valid={this.state.hasUserName} invalid={this.propertyInvalid('hasUserName')}/>
                     <FormFeedback valid={false}>{this.state.userNameError}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                     <Label for="password">Password</Label>
                     <Input type="password" name="password" id="password" placeholder="Password"
-                           valid={this.state.hasPassword} invalid={this.propertyInvalid('hasPassword')}/>
+                        valid={this.state.hasPassword} invalid={this.propertyInvalid('hasPassword')}/>
                     <FormFeedback valid={false}>Please fill in a password!</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                     <Label for="confirmPassword">Repeat Password</Label>
                     <Input type="password" name="confirmPassword" id="confirmPassword" placeholder="Repeat password"
-                           valid={this.state.repeatPasswordValid} invalid={this.propertyInvalid('repeatPasswordValid')}/>
+                        valid={this.state.repeatPasswordValid} invalid={this.propertyInvalid('repeatPasswordValid')}/>
                     <FormFeedback valid={false}>Passwords do not match!</FormFeedback>
                 </FormGroup>
                 <Button type="submit" color="primary">Register</Button>

@@ -1,0 +1,41 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": true,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "semi": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "linebreak-style": ["error", "unix"],
+    "indent": ["error", 4],
+    "comma-dangle": ["error", "never"],
+    "max-len": ["error", { "comments": 200, "code": 150, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
+    "no-underscore-dangle": ["error"],
+    "object-shorthand": ["error", "always"]
+  },
+  "settings": {
+    "import/parser": "babel-eslint",
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true
+  }
+}

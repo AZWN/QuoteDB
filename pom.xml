@@ -174,36 +174,6 @@
                 <extensions>true</extensions>
                 <version>4.2.0</version>
             </plugin>
-            <plugin>
-                <groupId>org.jooby</groupId>
-                <artifactId>jooby-maven-plugin</artifactId>
-                <version>${jooby.version}</version>
-                <configuration>
-                    <mainClass>${application.class}</mainClass>
-                    <commands>
-                    </commands>
-                    <compiler>on</compiler>
-                    <fork>false</fork>
-                    <vmArgs></vmArgs>
-                    <debug>true</debug>
-                    <includes>
-                        <include>**/*.class</include>
-                        <include>**/*.conf</include>
-                        <include>**/*.properties</include>
-                    </includes>
-                    <excludes>
-                    </excludes>
-                    <srcExtensions>.java,.kt,.conf,.properties</srcExtensions>
-                </configuration>
-                <executions>
-                    <!-- Process assets -->
-                    <execution>
-                        <goals>
-                            <goal>assets</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- Build fat jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

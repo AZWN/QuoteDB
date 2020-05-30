@@ -31,7 +31,7 @@ class LoginForm extends React.Component {
             const password = $('#password')[0].value;
             login(userName, password).then(() => {
                 this.onLogin();
-                this.props.history.push('/dashboard');
+                this.props.history.push('/');
             }, req => {
                 const passwordError = req.status === 401 ? 'Username/password combination invalid' : 'Unexpected error when logging in';
                 this.setState({ passwordError, hasPassword: false });

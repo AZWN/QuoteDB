@@ -3,7 +3,7 @@ import 'bootstrap/dist/js/bootstrap.min';
 import 'startbootstrap-freelancer/dist/css/styles.css';
 import '../css/quotedb.css';
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
@@ -34,28 +34,49 @@ export class QuoteDBAppFrame extends React.Component {
                     <Header onLogout={() => this.updateLoggedIn()}/>
                     <Container className="quotedb-container">
                         <Switch>
-                            <Route path="/register">
-                                <Row>
-                                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
-                                        <RegisterForm />
-                                    </Col>
-                                </Row>
-                            </Route>
-                            <Route path="/login">
-                                <Row>
-                                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
-                                        <LoginForm onLogin={() => this.updateLoggedIn()}/>
-                                    </Col>
-                                </Row>
-                            </Route>
-                            <Route path="/">
-                                <RedirectHome loggedIn={this.state.loggedIn}/>
-                            </Route>
+                            {this.state.loggedIn ? this.renderUserRoutes() : this.renderAnonymousRoutes()}
                         </Switch>
                     </Container>
                 </Router>
             </div>
         );
+    }
+    renderSharedRoutes() {
+        return (
+            <Fragment>
+                <Route path="/">
+                    <RedirectHome loggedIn={this.state.loggedIn}/>
+                </Route>
+            </Fragment>
+        );
+    }
+    renderAnonymousRoutes() {
+        return (<Fragment>
+            {this.renderSharedRoutes()}
+            <Route path="/register">
+                <Row>
+                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
+                        <RegisterForm />
+                    </Col>
+                </Row>
+            </Route>
+            <Route path="/login">
+                <Row>
+                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
+                        <LoginForm onLogin={() => this.updateLoggedIn()}/>
+                    </Col>
+                </Row>
+            </Route>
+        </Fragment>);
+    }
+    renderUserRoutes() {
+        return (
+            <Fragment>
+                {this.renderSharedRoutes()}
+                <Route path="/dashboard">
+                    <p>Welcome!</p>
+                </Route>
+            </Fragment>);
     }
 }
 

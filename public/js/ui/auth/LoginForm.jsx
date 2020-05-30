@@ -17,6 +17,7 @@ class RegisterForm extends React.Component {
         return !!val;
     }
     submitForm(event) {
+        debugger;
         event.preventDefault();
         const hasUserName = this.fieldPresent('#userName');
         const hasPassword = this.fieldPresent('#password');

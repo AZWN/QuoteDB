@@ -6,3 +6,50 @@
   background: #2c3e50;
   color: white;
 }
+
+.main-header {
+  background: #223240;
+  color: white;
+  height: 50vh;
+}
+
+.main-body {
+  margin-top: 84px;
+}
+
+.main-header h1 {
+  font-size: 56px;
+}
+
+.main-header p {
+  margin-top: 32px;
+  font-size: 24px;
+}
+
+.main-header-content {
+  text-align: center;
+  padding: 70px 0;
+  height: 100%;
+}
+
+.main-button-container {
+  margin-top: 10vh;
+}
+
+.main-button-container a {
+  font-size: 20px;
+}
+
+.primary-text {
+  color: #148f77 !important;
+}
+
+.secondary-text {
+  color: #148f77 !important;
+}
+
+.btn-square {
+  border-radius: 1px;
+  margin-left: 16px;
+  margin-right: 16px;
+}

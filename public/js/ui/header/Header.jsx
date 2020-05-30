@@ -41,7 +41,7 @@ class Header extends React.Component {
         return (
             <Navbar id="mainNav" expand="lg" light className="bg-secondary">
                 <Container>
-                    <NavbarBrand href="/">QuoteDB</NavbarBrand>
+                    <NavbarBrand className="primary-text" href="/">AppCiting</NavbarBrand>
                 </Container>
                 <NavbarToggler onClick={() => this.toggleMenu()} />
                 <Collapse isOpen={this.state.open} navbar>

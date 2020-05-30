@@ -5,10 +5,9 @@ import '../css/quotedb.css';
 
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 
-import PropTypes from 'prop-types';
 import { isLoggedIn } from './api/auth';
 
 import Header from './ui/header/Header';
@@ -32,70 +31,80 @@ export class QuoteDBAppFrame extends React.Component {
             <div className="test quotedb-app-frame">
                 <Router>
                     <Header onLogout={() => this.updateLoggedIn()}/>
-                    <Container className="quotedb-container">
-                        <Switch>
-                            {this.state.loggedIn ? this.renderUserRoutes() : this.renderAnonymousRoutes()}
-                        </Switch>
-                    </Container>
+                    <Switch>
+                        {this.state.loggedIn ? this.renderUserRoutes() : this.renderAnonymousRoutes()}
+                    </Switch>
                 </Router>
             </div>
         );
     }
     renderSharedRoutes() {
-        return (
-            <Fragment>
-                <Route path="/">
-                    <RedirectHome loggedIn={this.state.loggedIn}/>
-                </Route>
-            </Fragment>
-        );
+        return (<Fragment>
+            <Route exact path="/">
+                <div className="main-header">
+                    <div className="main-header-content">
+                        <h1 className="primary-text">AppCiting</h1>
+                        <p className="secondary-text">Life itself is a quotation (Jorge Luis Borges)</p>
+                        <div className="main-button-container">
+                            <Link className="btn btn-square btn-primary" to="/about">Take the Tour!</Link>
+                            {this.state.loggedIn ?
+                                <Link className="btn btn-square btn-secondary" to="/quotes">Browse Quotes</Link> :
+                                <Link className="btn btn-square btn-secondary" to="/login">Login</Link>}
+                        </div>
+                    </div>
+                </div>
+                <Container className="main-body quotedb-container">
+                    <Row>
+                        <Col sm={{size: 4}}>
+                            <h3>Easy</h3>
+                            <p>AppCiting makes it easy to collect, manage and share your quotes.
+                                Using our fast and responsive web interface or one of the apps, you can quickly save your quotes,
+                                and access them from anywhere you want.</p>
+                        </Col>
+                        <Col sm={{size: 4}}>
+                            <h3>Free</h3>
+                            <p>AppCiting is unlimited and free to use, without any advertisements and spam.</p>
+                        </Col>
+                        <Col sm={{size: 4}}>
+                            <h3>Flexible</h3>
+                            <p>Using our advanced mechanisms to organize you quotes,
+                                including a high-end search engine and fine-grained sharing options, you are in full control
+                                over your quote collections.</p>
+                        </Col>
+                    </Row>
+                </Container>
+            </Route>
+        </Fragment>);
     }
     renderAnonymousRoutes() {
         return (<Fragment>
             {this.renderSharedRoutes()}
             <Route path="/register">
-                <Row>
-                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
-                        <RegisterForm />
-                    </Col>
-                </Row>
+                <Container className="quotedb-container">
+                    <Row>
+                        <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
+                            <RegisterForm />
+                        </Col>
+                    </Row>
+                </Container>
             </Route>
             <Route path="/login">
-                <Row>
-                    <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
-                        <LoginForm onLogin={() => this.updateLoggedIn()}/>
-                    </Col>
-                </Row>
+                <Container className="quotedb-container">
+                    <Row>
+                        <Col sm={{ size: 6, offset: 3 }} md={{ size: 6, offset: 3 }} lg={{ size: 4, offset: 4}}>
+                            <LoginForm onLogin={() => this.updateLoggedIn()}/>
+                        </Col>
+                    </Row>
+                </Container>
             </Route>
         </Fragment>);
     }
     renderUserRoutes() {
-        return (
-            <Fragment>
-                {this.renderSharedRoutes()}
-                <Route path="/dashboard">
-                    <p>Welcome!</p>
-                </Route>
-            </Fragment>);
+        return (<Fragment>
+            {this.renderSharedRoutes()}
+        </Fragment>);
     }
 }
-
-class RedirectHome extends React.Component {
-    constructor(props) {
-        super(props);
-        this.loggedIn = props.loggedIn;
-    }
-    render() {
-        if (this.loggedIn) {
-            return (<Redirect to="/dashboard"/>);
-        }
-        return (<Redirect to="/login"/>);
-    }
-}
-
-RedirectHome.propTypes = {
-    loggedIn: PropTypes.bool
-};
 
 ReactDOM.render(
     <QuoteDBAppFrame />,

@@ -19,7 +19,8 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <jooby.version>1.6.0</jooby.version>
+        <jooby.version>1.6.7</jooby.version>
+        <requery.version>1.6.0</requery.version>
         <jdbi3.version>3.8.2</jdbi3.version>
         <junit.version>5.4.2</junit.version>
         <!-- Startup class -->
@@ -81,13 +82,13 @@
         <dependency>
             <groupId>io.requery</groupId>
             <artifactId>requery</artifactId>
-            <version>${jooby.version}</version>
+            <version>${requery.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.requery</groupId>
             <artifactId>requery-jackson</artifactId>
-            <version>${jooby.version}</version>
+            <version>${requery.version}</version>
         </dependency>
 
         <dependency>
@@ -110,11 +111,6 @@
             <artifactId>jooby-frontend</artifactId>
             <version>${jooby.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jooby</groupId>
-            <artifactId>jooby-hbs</artifactId>
-            <version>${jooby.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
@@ -300,7 +296,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.6</version>
+                <version>1.10.0</version>
                 <executions>
                     <execution>
                         <id>install node and npm</id>
@@ -309,7 +305,7 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v8.6.0</nodeVersion>
+                            <nodeVersion>v10.17.0</nodeVersion>
                         </configuration>
                     </execution>
                     <execution>

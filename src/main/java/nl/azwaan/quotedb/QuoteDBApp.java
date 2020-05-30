@@ -4,7 +4,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.requery.sql.TableCreationMode;
 import io.requery.sql.TransactionMode;
 
-import nl.azwaan.quotedb.models.Models;
 import nl.azwaan.quotedb.users.DevUserIDProvider;
 import nl.azwaan.quotedb.users.TokenUserIDProvider;
 import nl.azwaan.quotedb.users.UserIDProvider;

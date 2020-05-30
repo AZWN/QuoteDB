@@ -4,7 +4,6 @@ import io.requery.EntityStore;
 import io.requery.meta.Type;
 
 import io.requery.query.Scalar;
-import nl.azwaan.quotedb.models.Models;
 
 import org.jooby.Jooby;
 import org.jooby.test.JoobyRule;

@@ -41,7 +41,7 @@ public class QuoteDBApp extends Jooby {
 
         // React frontend setup
         on("dev", "dev-no-auth", "", () -> {
-            use(new Npm("v10.16.0"));
+            use(new Npm("v10.17.0"));
         });
 
         on("dev-no-auth", () -> {

@@ -12,6 +12,7 @@ class Header extends React.Component {
         this.state = {
             open: false
         };
+        this.name = props.name;
     }
     logout() {
         logout();
@@ -31,7 +32,7 @@ class Header extends React.Component {
         return (
             <Navbar id="mainNav" expand="lg" light className="bg-secondary">
                 <Container>
-                    <NavbarBrand className="primary-text" href="/">AppCiting</NavbarBrand>
+                    <NavbarBrand className="primary-text" href="/">{this.name}</NavbarBrand>
                     <NavbarToggler onClick={() => this.toggleMenu()} />,
                     <Collapse isOpen={this.state.open} navbar>
                         <Nav navbar className="ml-auto">
@@ -56,7 +57,8 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-    onLogout: PropTypes.func.isRequired
+    onLogout: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired
 };
 
 export default withRouter(Header);

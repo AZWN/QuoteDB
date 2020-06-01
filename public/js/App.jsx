@@ -7,6 +7,7 @@ import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
+import PropTypes from 'prop-types';
 
 import { isLoggedIn } from './api/auth';
 
@@ -20,6 +21,7 @@ export class QuoteDBAppFrame extends React.Component {
         this.state = {
             loggedIn: isLoggedIn()
         };
+        this.name = props.name;
     }
     updateLoggedIn() {
         this.setState( {
@@ -30,7 +32,7 @@ export class QuoteDBAppFrame extends React.Component {
         return (
             <div className="test quotedb-app-frame">
                 <Router>
-                    <Header onLogout={() => this.updateLoggedIn()}/>
+                    <Header onLogout={() => this.updateLoggedIn()} name={this.name}/>
                     <Switch>
                         {this.state.loggedIn ? this.renderUserRoutes() : this.renderAnonymousRoutes()}
                     </Switch>
@@ -43,7 +45,7 @@ export class QuoteDBAppFrame extends React.Component {
             <Route exact path="/">
                 <div className="main-header">
                     <div className="main-header-content">
-                        <h1 className="primary-text">AppCiting</h1>
+                        <h1 className="primary-text">{this.name}</h1>
                         <p className="secondary-text">Life itself is a quotation (Jorge Luis Borges)</p>
                         <div className="main-button-container">
                             <Link className="btn btn-square btn-primary" to="/about">Take the Tour!</Link>
@@ -57,13 +59,13 @@ export class QuoteDBAppFrame extends React.Component {
                     <Row>
                         <Col sm={{size: 4}}>
                             <h3>Easy</h3>
-                            <p>AppCiting makes it easy to collect, manage and share your quotes.
+                            <p>{this.name} makes it easy to collect, manage and share your quotes.
                                 Using our fast and responsive web interface or one of the apps, you can quickly save your quotes,
                                 and access them from anywhere you want.</p>
                         </Col>
                         <Col sm={{size: 4}}>
                             <h3>Free</h3>
-                            <p>AppCiting is unlimited and free to use, without any advertisements and spam.</p>
+                            <p>{this.name} is unlimited and free to use, without any advertisements and spam.</p>
                         </Col>
                         <Col sm={{size: 4}}>
                             <h3>Flexible</h3>
@@ -106,7 +108,11 @@ export class QuoteDBAppFrame extends React.Component {
     }
 }
 
+QuoteDBAppFrame.propTypes = {
+    name: PropTypes.string.isRequired
+};
+
 ReactDOM.render(
-    <QuoteDBAppFrame />,
+    <QuoteDBAppFrame name="Quotastic"/>,
     document.getElementById('react-root')
 );

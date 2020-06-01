@@ -53,3 +53,6 @@
   margin-left: 16px;
   margin-right: 16px;
 }
+.collapse-align-right .nav-item {
+  text-align: right;
+}
